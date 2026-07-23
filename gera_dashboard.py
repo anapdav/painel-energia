@@ -67,7 +67,7 @@ def kpi(sid, label, unidade, casas=2, escala=1.0):
     return {"label": label, "valor": val, "unidade": unidade, "data": d}
 
 
-def kpi_yahoo(sid, label):
+def kpi_fut(sid, label):
     d, v = ultimo(sid)
     def m(sufixo):
         r = con.execute("SELECT valor FROM meta WHERE chave=?", (f"{sid}_{sufixo}",)).fetchone()
@@ -75,13 +75,13 @@ def kpi_yahoo(sid, label):
     val = f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if v is not None else "-"
     contrato = m("contrato") or "contrato n/d"
     return {"label": label, "valor": val,
-            "unidade": f"USD/b — {contrato} (Yahoo, ~15min)",
+            "unidade": f"USD/b — {contrato} (CME, atraso 10 min)",
             "data": m("hora") or d}
 
 
 KPIS = [
-    kpi_yahoo("yahoo_wti_fut", "WTI futuro"),
-    kpi_yahoo("yahoo_brent_fut", "Brent futuro"),
+    kpi_fut("fut_wti", "WTI futuro"),
+    kpi_fut("fut_brent", "Brent futuro"),
     kpi("eia_henryhub_spot", "Henry Hub", "USD/MMBtu"),
     kpi("smard_de_preco_da", "Day-ahead DE-LU", "EUR/MWh", 1),
     kpi("agsi_eu_cheio_pct", "Gás UE armazenado", "% cheio", 1),

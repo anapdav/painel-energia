@@ -64,10 +64,11 @@ Usam o **último ano com todas as colunas publicadas** (ex.: consumo da EIA inte
 - International: produção = productId 53 (total liquids); **consumo = productId 5** com `unit=TBPD` (o 53 não tem consumo). Erros 500 transitórios acontecem — rodada seguinte corrige.
 - WPSR: quarta 10:30 ET (feriado → quinta). Estoques de gás: quinta 10:30 ET.
 
-### Yahoo Finance (futuros — fonte de MERCADO, não primária)
-- API não-oficial, atraso ~15 min; rotulado em todo uso. Série oficial de preço segue sendo a EIA.
-- **Pareamento de vencimentos (regra crítica):** o contínuo BZ=F rola de contrato dias antes do CL=F e pode ficar defasado — comparar meses diferentes inverte o spread WTI-Brent. O coletor extrai o mês do CL=F e cota o Brent do mesmo mês via ticker explícito (`BZ{código}{ano}.NYM`). KPI mostra o contrato ("Brent Sep 26, pareado c/ WTI") e a hora da cotação.
-- Saltos na data de rolagem são troca de contrato, não movimento de preço.
+### CME Group (futuros — cotação direto da bolsa; substitui o Yahoo desde 23/07/2026)
+- Endpoint do site da CME (`/CmeWS/mvc/quotes/v2/{productId}`; WTI CL = 425, Brent Last Day BZ = 424), **não documentado**; atraso de 10 min declarado pela própria resposta (`quoteDelay`). Fonte de mercado, não regulatória — a série oficial de preço segue sendo a EIA.
+- **Pareamento de vencimentos (regra crítica, aprendida no Yahoo):** contínuos de redistribuidores rolam em datas diferentes e podem inverter o spread WTI-Brent. Aqui o front month do CL define o vencimento e o Brent cotado é o contrato BZ do **mesmo mês**, casado por código (CLU6 → BZU6). KPI mostra contrato e hora.
+- Mercado fechado → usa o settlement anterior, rotulado "(settle anterior)".
+- A API não fornece histórico: a série diária acumula um ponto por pregão. Pontos até 23/07/2026 vieram do Yahoo (mesmos dados CME redistribuídos) — emenda documentada na descrição da série.
 
 ### JODI (petróleo, mensal, auto-reportado)
 - Marcador de faltante é `"-"` → tratado como **ausente, nunca zero**.
