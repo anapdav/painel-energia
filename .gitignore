@@ -1,0 +1,4 @@
+.env
+__pycache__/
+energia.db
+log_atualiza.txt
