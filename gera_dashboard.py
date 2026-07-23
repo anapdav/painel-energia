@@ -674,6 +674,82 @@ if _vazios:
 
 # Notas de rodapé por aba (didática: siglas e por que cada painel importa)
 NOTAS_ABA = {
+    "Visão Global": (
+        "<b>Como ler esta aba.</b> <b>STEO</b> (Short-Term Energy Outlook) é o exercício "
+        "mensal da EIA que estima oferta e demanda mundiais — os meses mais recentes são "
+        "estimativa, não realizado. A diferença entre as duas curvas é a <b>variação "
+        "implícita de estoques</b>: mundo produzindo mais do que consome acumula barris "
+        "(pressão baixista no preço); consumindo mais do que produz, queima estoque "
+        "(pressão altista). Como China e boa parte do mundo emergente não publicam "
+        "estoques, o que se enxerga de fato é o estoque comercial da <b>OCDE</b> (clube "
+        "das economias avançadas). <b>IEA Total</b> = soma dos países-membros da Agência "
+        "Internacional de Energia (~OCDE), não o mundo inteiro."),
+    "Óleo & Gás global": (
+        "<b>Como ler esta aba.</b> <b>WPSR</b> (Weekly Petroleum Status Report) é o "
+        "relatório semanal da EIA — sai toda quarta 10:30 ET e é o dado que mais move o "
+        "preço do petróleo no curto prazo. <b>SPR</b> (Strategic Petroleum Reserve) é a "
+        "reserva estratégica do governo americano, em cavernas de sal — foi esvaziada pela "
+        "metade em 2022–23 para segurar o preço; <b>ex-SPR</b> = estoques comerciais, sem "
+        "a reserva do governo. <b>Cushing</b> (Oklahoma) é o ponto de entrega física do "
+        "contrato futuro de WTI: estoque baixo ali aperta especificamente o vencimento do "
+        "contrato. <b>Rigs</b> são as sondas de perfuração ativas (contagem Baker Hughes, "
+        "sextas): antecedem a produção do <b>shale</b> (óleo de xisto, ciclo curto de "
+        "investimento — o produtor marginal do mundo) em ~6 a 9 meses. <b>Managed money "
+        "(CFTC)</b> é a posição líquida dos fundos nos futuros — o termômetro do "
+        "posicionamento especulativo, publicado toda sexta com dado de terça. <b>JODI</b> "
+        "compila dados auto-reportados pelos países — cobertura ampla, qualidade desigual."),
+    "Petróleo por produto": (
+        "<b>Como ler esta aba.</b> O barril de petróleo não é consumido — seus derivados "
+        "são, e cada um conta uma história: <b>gasolina</b> = consumidor (mobilidade leve); "
+        "<b>diesel/gasóleo</b> = indústria, frete e agro (o termômetro da atividade); "
+        "<b>jet fuel</b> = aviação; <b>nafta</b> = matéria-prima da petroquímica "
+        "(plásticos); <b>GLP</b> = cozinha e petroquímica; <b>óleo combustível</b> = navios "
+        "e geração elétrica residual. <b>Product supplied</b> é a métrica da EIA que "
+        "aproxima demanda: o que saiu do sistema primário para o mercado."),
+    "Refino por derivado": (
+        "<b>Como ler esta aba.</b> Refinaria transforma cru em derivados — e a geografia "
+        "do refino define os fluxos de comércio: os países que refinam além do próprio "
+        "consumo (EUA, Índia, Coreia, Golfo) exportam derivados para quem fechou "
+        "refinarias (Europa, América Latina, África). Os dados são o <b>refinery gross "
+        "output</b> do JODI: produção bruta das refinarias por produto, mensal, "
+        "auto-reportada — Rússia parou de reportar em 2023 e Brasil em 2022, e as linhas "
+        "terminam onde o reporte termina."),
+    "Fertilizantes": (
+        "<b>Como ler esta aba.</b> Fertilizante nitrogenado é, economicamente, um derivado "
+        "do <b>gás natural</b>: a amônia (processo Haber-Bosch) usa o gás como matéria-prima "
+        "e energia — na China, a rota dominante é via carvão. Por isso o preço do gás "
+        "europeu define a competitividade da química da região (no choque de 2022, plantas "
+        "de amônia fecharam em cascata — visível no painel do gás da química). <b>N</b> = "
+        "nutriente nitrogênio contido no fertilizante (FAOSTAT/ONU, anual). O painel do "
+        "Brasil mostra a distância entre o que o agro usa e o que o país produz — a "
+        "dependência de importação, majoritariamente da Rússia e do Golfo."),
+    "Matriz Alemanha": (
+        "<b>Como ler esta aba.</b> A Alemanha é o laboratório da transição elétrica "
+        "(<b>Energiewende</b>): saiu da nuclear (último reator em abril/2023), está saindo "
+        "do carvão e dobrou a aposta em eólica e solar. O <b>preço day-ahead</b> é o leilão "
+        "do dia seguinte na zona <b>DE-LU</b> (Alemanha+Luxemburgo): renovável entra no "
+        "sistema a custo marginal ~zero, então dias de vento e sol forte derrubam o preço "
+        "(às vezes para negativo) e comprimem as térmicas — a competição entre fontes "
+        "acontecendo em tempo real."),
+    "Matriz Europa": (
+        "<b>Como ler esta aba.</b> Eletricidade não viaja bem entre continentes — cada "
+        "zona tem seu preço, e as diferenças revelam a matriz de cada país: França barata "
+        "quando o parque nuclear opera bem; Polônia cara e presa ao carvão; Espanha "
+        "achatada pela solar; Itália atrelada ao gás. As interconexões arbitram parte da "
+        "diferença, mas o gargalo físico mantém os spreads. Dados da <b>ENTSO-E</b> (a "
+        "associação dos operadores de rede europeus) — geração realizada por fonte e "
+        "preços day-ahead por zona."),
+    "Brasil": (
+        "<b>Como ler esta aba.</b> A matriz brasileira é hidro-dominante, então o "
+        "\"estoque\" do sistema é água: <b>EAR</b> (Energia Armazenada) mede quanto os "
+        "reservatórios guardam, em % do máximo; <b>ENA</b> (Energia Natural Afluente) é a "
+        "chuva que virou vazão, medida contra a <b>MLT</b> (média de longo termo — 100% = "
+        "chuva típica). <b>PLD</b> (Preço de Liquidação das Diferenças, CCEE) é o preço "
+        "spot horário por submercado; <b>CMO</b> (Custo Marginal de Operação, ONS) é o "
+        "custo da próxima unidade despachada — os dois sobem quando o reservatório cai e a "
+        "térmica entra. <b>SIN</b> = Sistema Interligado Nacional; <b>MWmed</b> = potência "
+        "média no período. Produção de petróleo: ANP (a fonte primária — o Brasil não "
+        "reporta mais ao JODI); consumo de eletricidade por classe: EPE."),
     "Gás Europa": (
         "<b>Como ler esta aba.</b> O gás natural não tem preço único mundial: cada região "
         "tem seu hub de referência — <b>Henry Hub</b> (EUA, na aba Óleo &amp; Gás global), "
