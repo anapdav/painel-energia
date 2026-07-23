@@ -64,8 +64,9 @@ Usam o **último ano com todas as colunas publicadas** (ex.: consumo da EIA inte
 - International: produção = productId 53 (total liquids); **consumo = productId 5** com `unit=TBPD` (o 53 não tem consumo). Erros 500 transitórios acontecem — rodada seguinte corrige.
 - WPSR: quarta 10:30 ET (feriado → quinta). Estoques de gás: quinta 10:30 ET.
 
-### CME Group (futuros — cotação direto da bolsa; substitui o Yahoo desde 23/07/2026)
-- Endpoint do site da CME (`/CmeWS/mvc/quotes/v2/{productId}`; WTI CL = 425, Brent Last Day BZ = 424), **não documentado**; atraso de 10 min declarado pela própria resposta (`quoteDelay`). Fonte de mercado, não regulatória — a série oficial de preço segue sendo a EIA.
+### CME Group (futuros — a FONTE PRIMÁRIA dos preços; substitui o Yahoo desde 23/07/2026)
+- Para preço de futuros, a bolsa é a fonte primária: os contratos WTI (CL) e Brent Last Day (BZ) são formados na própria CME, e a cotação atrasada publicada no site dela é publicação oficial do originador do dado — redistribuidores (Yahoo etc.) derivam dali.
+- Acesso pelo endpoint que alimenta o site (`/CmeWS/mvc/quotes/v2/{productId}`; CL = 425, BZ = 424), atraso de 10 min declarado na própria resposta (`quoteDelay`). Ressalva de **engenharia** (não de procedência): endpoint sem documentação pública, pode mudar sem aviso. A EIA permanece como fonte das séries longas oficiais de spot (WTI Cushing, Brent, Henry Hub).
 - **Pareamento de vencimentos (regra crítica, aprendida no Yahoo):** contínuos de redistribuidores rolam em datas diferentes e podem inverter o spread WTI-Brent. Aqui o front month do CL define o vencimento e o Brent cotado é o contrato BZ do **mesmo mês**, casado por código (CLU6 → BZU6). KPI mostra contrato e hora.
 - Mercado fechado → usa o settlement anterior, rotulado "(settle anterior)".
 - A API não fornece histórico: a série diária acumula um ponto por pregão. Pontos até 23/07/2026 vieram do Yahoo (mesmos dados CME redistribuídos) — emenda documentada na descrição da série.

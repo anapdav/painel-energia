@@ -44,7 +44,9 @@ Legenda de viabilidade: 🟢 plugável hoje, verificado ponta a ponta · 🟡 fu
 - Verificado ao vivo: https://rigcount.bakerhughes.com/na-rig-count — XLSX semanal (último: 17/07/2026), históricos .xlsb com rigs por estado desde 2000, médias anuais desde 1987.
 - **Atenção:** links via `/static-files/{uuid}`, UUID muda a cada semana → o coletor lê a página, não fixa URL. Divulgação sexta-feira (~meio-dia CT **[horário não verificado]**).
 
-### 1.6 CFTC — posicionamento em futuros 🟢
+### 1.5-b CME Group — futuros de petróleo (adicionada 23/07/2026) 🟢
+- **Fonte primária dos preços de futuros**: WTI (CL, productId 425) e Brent Last Day Financial (BZ, 424) são contratos da própria CME. Cotações com atraso de 10 min (declarado no campo `quoteDelay`) via endpoint do site: `https://www.cmegroup.com/CmeWS/mvc/quotes/v2/{productId}` — JSON com todos os vencimentos, `isFrontMonth`, `quoteCode` (ex. CLU6), settlement anterior.
+- **Verificado ao vivo em 23/07/2026** com `curl_cffi` (o endpoint v1 antigo morreu; o v2 responde sem token). Ressalva: endpoint não documentado — monitorar quebras. ICE (Brent físico): dado pago, sem via gratuita.
 - **API Socrata pública, sem autenticação, verificada ao vivo** (retornou dado de 14/07/2026):
   `https://publicreporting.cftc.gov/resource/72hh-3qpy.json?$limit=1&$where=commodity_name='CRUDE OIL'&$order=report_date_as_yyyy_mm_dd DESC`
   Dataset `72hh-3qpy` = Disaggregated Futures Only (managed money, producers, swap dealers, OI); `kh3c-gbw2` = Combined. Parâmetros SoQL `$where/$select/$limit`; CSV/JSON/XML.
