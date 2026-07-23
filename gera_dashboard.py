@@ -644,7 +644,7 @@ CH["epe"] = {
 
 ABAS = [
     ("Visão Global", ["mundo_liq", "mundo_estoque_var", "mundo_estoque_ocde",
-                      "tab_balanco", "tab_delta", "iea_abs", "iea_share"]),
+                      "iea_abs", "iea_share", "tab_balanco", "tab_delta"]),
     ("Petróleo por produto", ["prod_dem_abs", "prod_dem_share", "prod_dem_us"]),
     ("Refino por derivado", [f"ref_{g}" for g, _ in REFINO_GRUPOS]),
     ("Fertilizantes", ["fert_prod", "fert_uso", "fert_brasil", "fert_gas"]),
@@ -750,6 +750,8 @@ footer{margin-top:18px;font-size:11.5px;color:var(--muted)}
   padding:12px 16px;line-height:1.6;font-size:11.5px;color:var(--muted)}
 .disclaimer b{color:var(--ink)}
 .rolagem{overflow-x:auto}
+.card-tabela{grid-column:1/-1}
+.card-tabela table{max-width:900px;margin:0 auto}
 table.tab-g{font-size:12px}
 table.tab-g th{color:var(--muted);font-weight:600;text-align:right;padding:4px 8px}
 table.tab-g th:first-child{text-align:left}
@@ -810,7 +812,7 @@ function mostra(ix){
     let cls="";
     if(j===t.sinal_col&&v!=="—")cls=v.startsWith("-")?' style="color:#e25d75"':' style="color:#3aa15f"';
     return `<td${cls}>${v}</td>`}).join("")}</tr>`).join("");
-   return `<div class="card"><h3>${c.titulo}</h3><div class="fonte">${c.fonte} — ${c.unidade}</div>`+
+   return `<div class="card card-tabela"><h3>${c.titulo}</h3><div class="fonte">${c.fonte} — ${c.unidade}</div>`+
     `<div class="rolagem"><table class="dados tab-g"><tr>${t.colunas.map(x=>`<th>${x}</th>`).join("")}</tr>${linhas}</table></div></div>`;
   }
   return `<div class="card" id="c_${id}"><button class="btn-tab" onclick="tabela('${id}')">tabela</button>`+
