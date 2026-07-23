@@ -538,6 +538,64 @@ CH["jodi_dem"] = {
          ("jodi_dem_JP", "Japão"), ("jodi_dem_DE", "Alemanha")],
         atribui_cores(["EUA", "China", "Índia", "Japão", "Alemanha"]))]}
 
+# --- Aba: Shale EUA (DPR/DUC) ---
+BACIAS = [("permian", "Permian", "azul"), ("appalachia", "Appalachia", "verde"),
+          ("haynesville", "Haynesville", "rose"), ("eagleford", "Eagle Ford", "ouro"),
+          ("bakken", "Bakken", "roxo"), ("niobrara", "Niobrara", "teal"),
+          ("anadarko", "Anadarko", "carvao")]
+
+def _stack_bacias(sufixo):
+    return [{"label": nome, "cor": COR[cor],
+             "data": compacta(q(f"shale_{slug}_{sufixo}", "2010-01-01"))}
+            for slug, nome, cor in BACIAS if q(f"shale_{slug}_{sufixo}")]
+
+_DPR_FIM = ("EIA Drilling Productivity Report — DESCONTINUADO, última edição "
+            "jun/2024 (série histórica preservada)")
+CH["shale_oleo"] = {
+    "titulo": "De onde vinha o óleo do shale — produção por bacia (histórico)",
+    "unidade": "mil b/d", "fonte": _DPR_FIM, "series": _stack_bacias("oleo"),
+    "stack": True, "abs": True}
+CH["shale_gas"] = {
+    "titulo": "E o gás — produção por bacia (histórico)", "unidade": "Bcf/d",
+    "fonte": _DPR_FIM + "; Appalachia e Haynesville são bacias de gás",
+    "series": _stack_bacias("gas"), "stack": True, "abs": True}
+CH["shale_produtividade"] = {
+    "titulo": "O segredo do shale — produção do poço novo por sonda (histórico)",
+    "unidade": "b/d por rig", "fonte": _DPR_FIM + "; eficiência: mais óleo com menos sondas",
+    "series": [{"label": nome, "cor": COR[cor],
+                "data": compacta(q(f"shale_{slug}_novo_poco", "2010-01-01"))}
+               for slug, nome, cor in BACIAS if slug in ("permian", "bakken", "eagleford")]}
+CH["shale_duc"] = {
+    "titulo": "DUCs — o estoque de poços perfurados e não completados (histórico)",
+    "unidade": "poços", "fonte": "EIA, relatório DUC — DESCONTINUADO, última edição "
+    "abr/2024 (queimar DUCs = produzir sem perfurar)",
+    "series": [{"label": nome, "cor": COR[cor],
+                "data": compacta(q(f"shale_{slug}_duc"))}
+               for slug, nome, cor in BACIAS if q(f"shale_{slug}_duc")]}
+
+_perf = defaultdict(float)
+_compl = defaultdict(float)
+for slug, _n, _c in BACIAS:
+    for d, v in q(f"shale_{slug}_perfurados"):
+        _perf[d] += v
+    for d, v in q(f"shale_{slug}_completados"):
+        _compl[d] += v
+CH["shale_atividade"] = {
+    "titulo": "Atividade — poços perfurados × completados (todas as bacias)",
+    "unidade": "poços/mês",
+    "fonte": "EIA relatório DUC — DESCONTINUADO em abr/2024 (completar > perfurar = "
+             "queimando DUCs). Permits/licenças não são dado EIA — perfurados era o proxy",
+    "series": [
+        {"label": "Perfurados", "cor": COR["azul"], "data": compacta(sorted(_perf.items()))},
+        {"label": "Completados", "cor": COR["ouro"], "data": compacta(sorted(_compl.items()))}]}
+CH["shale_estados"] = {
+    "titulo": "Produção de crude por estado", "unidade": "mil b/d",
+    "fonte": "EIA (mensal; TX+NM = Permian, ND = Bakken)",
+    "series": [
+        serie("shale_estado_tx", "Texas", "azul", "2010-01-01"),
+        serie("shale_estado_nm", "Novo México", "ouro", "2010-01-01"),
+        serie("shale_estado_nd", "Dakota do Norte", "roxo", "2010-01-01")]}
+
 # --- Aba 2: Gás Europa ---
 def agsi_por_ano(sid, anos, cores):
     out = []
@@ -728,6 +786,8 @@ ABAS = [
     ("Óleo & Gás global", ["precos_oleo", "hh", "estoques_us", "cushing_spr",
                            "prod_us", "rigs", "gas_estoque_us", "cftc",
                            "jodi_prod", "jodi_dem"]),
+    ("Shale EUA", ["shale_estados", "rigs", "shale_oleo", "shale_gas",
+                   "shale_produtividade", "shale_duc", "shale_atividade"]),
     ("Gás Europa", ["agsi_anos", "agsi_paises", "agsi_fluxo", "alsi"]),
     ("Matriz Alemanha", ["de_share", "de_preco", "de_carga"]),
     ("Matriz Europa", ["eu_precos", "fr_share", "es_share", "it_share", "pl_share"]),
@@ -827,6 +887,22 @@ NOTAS_ABA = {
         "térmica entra. <b>SIN</b> = Sistema Interligado Nacional; <b>MWmed</b> = potência "
         "média no período. Produção de petróleo: ANP (a fonte primária — o Brasil não "
         "reporta mais ao JODI); consumo de eletricidade por classe: EPE."),
+    "Shale EUA": (
+        "<b>Como ler esta aba.</b> O shale (óleo/gás de xisto) mudou o mercado por ter "
+        "<b>ciclo curto</b>: da decisão de perfurar ao barril produzido passam meses, não "
+        "anos — é o produtor que responde a preço. O <b>DPR</b> (Drilling Productivity "
+        "Report, EIA) acompanha as 7 bacias: <b>Permian</b> (Texas/Novo México) domina o "
+        "óleo; <b>Appalachia</b> e <b>Haynesville</b> são gás. A <b>produção do poço novo "
+        "por sonda</b> é o segredo da resiliência: eficiência crescente permite produzir "
+        "mais com menos rigs. <b>DUC</b> (drilled but uncompleted) é o estoque de poços "
+        "perfurados à espera de fraturamento — completar mais do que perfura significa "
+        "queimar esse estoque (produção hoje, ao custo da atividade futura). "
+        "<b>Licenças/permits</b> são dado das agências estaduais (não EIA) — o proxy de "
+        "atividade era poços perfurados. <b>Atenção:</b> a EIA DESCONTINUOU o DPR e o "
+        "relatório de DUCs (últimas edições jun/2024 e abr/2024) — os painéis históricos "
+        "ficam preservados como referência estrutural, e o acompanhamento corrente do "
+        "shale se faz pelos dois primeiros painéis (produção por estado, mensal) e pelos "
+        "rigs semanais da Baker Hughes, além da produção semanal na aba Óleo &amp; Gás."),
     "Gás Europa": (
         "<b>Como ler esta aba.</b> O gás natural não tem preço único mundial: cada região "
         "tem seu hub de referência — <b>Henry Hub</b> (EUA, na aba Óleo &amp; Gás global), "

@@ -5,13 +5,13 @@ import time
 
 import db
 from coletores import (eia, agsi, smard, ons, ccee, jodi, cftc, anp,
-                       bakerhughes, epe, entsoe, iea, cme, fao, eurostat)
+                       bakerhughes, epe, entsoe, iea, cme, fao, eurostat, shale)
 
 COLETORES = {"eia": eia, "agsi": agsi, "smard": smard,
              "ons": ons, "ccee": ccee, "jodi": jodi, "cftc": cftc,
              "anp": anp, "bakerhughes": bakerhughes, "epe": epe,
              "entsoe": entsoe, "iea": iea, "cme": cme,
-             "fao": fao, "eurostat": eurostat}
+             "fao": fao, "eurostat": eurostat, "shale": shale}
 
 
 def main():

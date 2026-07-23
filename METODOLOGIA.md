@@ -63,6 +63,7 @@ Usam o **último ano com todas as colunas publicadas** (ex.: consumo da EIA inte
 - Rotas dnav usam facet `series`; STEO usa `seriesId`; international usa `productId`/`activityId`/`countryRegionId`/`unit`.
 - International: produção = productId 53 (total liquids); **consumo = productId 5** com `unit=TBPD` (o 53 não tem consumo). Erros 500 transitórios acontecem — rodada seguinte corrige.
 - WPSR: quarta 10:30 ET (feriado → quinta). Estoques de gás: quinta 10:30 ET.
+- **Shale**: o Drilling Productivity Report e o relatório de DUCs foram **descontinuados pela EIA** (últimas edições jun/2024 e abr/2024) — séries históricas preservadas e rotuladas como encerradas; o acompanhamento corrente usa produção mensal por estado (TX/NM/ND), produção semanal e rigs Baker Hughes. "Licenças/permits" são dado de agências estaduais, não EIA.
 
 ### CME Group (futuros — a FONTE PRIMÁRIA dos preços; substitui o Yahoo desde 23/07/2026)
 - Para preço de futuros, a bolsa é a fonte primária: os contratos WTI (CL) e Brent Last Day (BZ) são formados na própria CME, e a cotação atrasada publicada no site dela é publicação oficial do originador do dado — redistribuidores (Yahoo etc.) derivam dali.
