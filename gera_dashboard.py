@@ -115,17 +115,17 @@ def kpi_fut(sid, label):
 INTRO_DATA = "23/07/2026"
 INTRO_TITULO = "O choque do Golfo e a nova fiação do mercado"
 INTRO_TEXTO = (
-    "A guerra no Irã fez o mercado precificar o risco do Estreito de Ormuz — por onde "
+    "A guerra no Irã fez o mercado precificar o risco no Estreito de Ormuz — por onde "
     "passa cerca de um quinto do petróleo mundial — e o Brent voltou aos três dígitos. "
-    "Mas o pior cenário não se materializou, e as razões aparecem nos painéis abaixo: "
-    "o choque é assimétrico (o spread Brent–WTI se abriu porque o barril do Atlântico é "
-    "o que falta, enquanto o shale americano — o produtor marginal da última década — "
-    "segue entregando), o amortecimento está sendo feito por estoques (o mundo queima "
-    "reservas no ritmo mais forte desde 2021, com a SPR americana pela metade), e a "
-    "resposta da oferta ainda não começou: os rigs de perfuração, que antecedem a "
-    "produção do shale em 6–9 meses, mal saíram do lugar. No gás, a Europa atravessa o "
-    "choque com armazenamento em ritmo normal de enchimento — a fiação nova do GNL "
-    "fazendo o trabalho que Ormuz ameaça interromper.")
+    "O pior cenário, porém, não se materializou, e as razões aparecem nos painéis "
+    "abaixo. O choque é assimétrico: o spread entre Brent e WTI se abriu porque o "
+    "barril que falta é o do Atlântico, enquanto o shale americano — o produtor "
+    "marginal da última década — segue entregando. O amortecimento vem dos estoques: o "
+    "mundo queima reservas no ritmo mais forte desde 2021, com a SPR americana pela "
+    "metade. E a resposta da oferta ainda não começou — os rigs de perfuração, que "
+    "antecedem a produção do shale em seis a nove meses, mal saíram do lugar. No gás, a "
+    "Europa atravessa o choque com o armazenamento enchendo em ritmo normal: é a nova "
+    "fiação do GNL fazendo o trabalho que Ormuz ameaça interromper.")
 
 
 def _intro_metricas():
@@ -812,81 +812,86 @@ if _vazios:
 # Notas de rodapé por aba (didática: siglas e por que cada painel importa)
 NOTAS_ABA = {
     "Visão Global": (
-        "<b>Como ler esta aba.</b> <b>STEO</b> (Short-Term Energy Outlook) é o exercício "
-        "mensal da EIA que estima oferta e demanda mundiais — os meses mais recentes são "
-        "estimativa, não realizado. A diferença entre as duas curvas é a <b>variação "
-        "implícita de estoques</b>: mundo produzindo mais do que consome acumula barris "
-        "(pressão baixista no preço); consumindo mais do que produz, queima estoque "
-        "(pressão altista). Como China e boa parte do mundo emergente não publicam "
-        "estoques, o que se enxerga de fato é o estoque comercial da <b>OCDE</b> (clube "
-        "das economias avançadas). <b>IEA Total</b> = soma dos países-membros da Agência "
-        "Internacional de Energia (~OCDE), não o mundo inteiro."),
+        "<b>Como ler esta aba.</b> O <b>STEO</b> (Short-Term Energy Outlook) é o "
+        "exercício mensal da EIA que estima a oferta e a demanda mundiais de petróleo — "
+        "os meses mais recentes são estimativa, não dado realizado. A diferença entre as "
+        "duas curvas é a <b>variação implícita de estoques</b>: quando o mundo produz "
+        "mais do que consome, acumulam-se barris e a pressão sobre o preço é baixista; "
+        "quando consome mais do que produz, queima-se estoque e a pressão é altista. Como "
+        "a China e boa parte do mundo emergente não publicam seus estoques, o que se "
+        "observa de fato é o estoque comercial da <b>OCDE</b>, o clube das economias "
+        "avançadas. <b>IEA Total</b> é a soma dos países-membros da Agência Internacional "
+        "de Energia (aproximadamente a OCDE) — não o mundo inteiro."),
     "Óleo & Gás global": (
-        "<b>Como ler esta aba.</b> <b>WPSR</b> (Weekly Petroleum Status Report) é o "
-        "relatório semanal da EIA — sai toda quarta 10:30 ET e é o dado que mais move o "
-        "preço do petróleo no curto prazo. <b>SPR</b> (Strategic Petroleum Reserve) é a "
-        "reserva estratégica do governo americano, em cavernas de sal — foi esvaziada pela "
-        "metade em 2022–23 para segurar o preço; <b>ex-SPR</b> = estoques comerciais, sem "
-        "a reserva do governo. <b>Cushing</b> (Oklahoma) é o ponto de entrega física do "
-        "contrato futuro de WTI: estoque baixo ali aperta especificamente o vencimento do "
-        "contrato. <b>Rigs</b> são as sondas de perfuração ativas (contagem Baker Hughes, "
-        "sextas): antecedem a produção do <b>shale</b> (óleo de xisto, ciclo curto de "
-        "investimento — o produtor marginal do mundo) em ~6 a 9 meses. <b>Managed money "
-        "(CFTC)</b> é a posição líquida dos fundos nos futuros — o termômetro do "
-        "posicionamento especulativo, publicado toda sexta com dado de terça. <b>JODI</b> "
-        "compila dados auto-reportados pelos países — cobertura ampla, qualidade desigual."),
+        "<b>Como ler esta aba.</b> O <b>WPSR</b> (Weekly Petroleum Status Report) é o "
+        "relatório semanal da EIA — publicado às quartas-feiras, 10h30 no horário do "
+        "leste americano — e o dado que mais move o preço do petróleo no curto prazo. A "
+        "<b>SPR</b> (Strategic Petroleum Reserve) é a reserva estratégica do governo "
+        "americano, armazenada em cavernas de sal; foi reduzida à metade em 2022–23 para "
+        "conter o preço. <b>Ex-SPR</b> designa os estoques comerciais, sem a reserva do "
+        "governo. <b>Cushing</b>, em Oklahoma, é o ponto de entrega física do contrato "
+        "futuro de WTI: estoque baixo ali aperta especificamente o vencimento do "
+        "contrato. <b>Rigs</b> são as sondas de perfuração ativas (contagem da Baker "
+        "Hughes, às sextas) e antecedem em seis a nove meses a produção do <b>shale</b> — "
+        "o produtor marginal do mundo, de ciclo curto. <b>Managed money</b> (CFTC) é a "
+        "posição líquida dos fundos nos mercados futuros, o termômetro do posicionamento "
+        "especulativo: dado de terça, publicado na sexta. O <b>JODI</b> compila "
+        "estatísticas auto-reportadas pelos países — cobertura ampla, qualidade desigual."),
     "Petróleo por produto": (
-        "<b>Como ler esta aba.</b> O barril de petróleo não é consumido — seus derivados "
-        "são, e cada um conta uma história: <b>gasolina</b> = consumidor (mobilidade leve); "
-        "<b>diesel/gasóleo</b> = indústria, frete e agro (o termômetro da atividade); "
-        "<b>jet fuel</b> = aviação; <b>nafta</b> = matéria-prima da petroquímica "
-        "(plásticos); <b>GLP</b> = cozinha e petroquímica; <b>óleo combustível</b> = navios "
-        "e geração elétrica residual. <b>Product supplied</b> é a métrica da EIA que "
-        "aproxima demanda: o que saiu do sistema primário para o mercado."),
+        "<b>Como ler esta aba.</b> Ninguém consome o barril de petróleo — consomem-se os "
+        "derivados, e cada um conta uma história. A <b>gasolina</b> fala do consumidor "
+        "(mobilidade leve); o <b>diesel/gasóleo</b>, da indústria, do frete e do agro — é "
+        "o termômetro da atividade; o <b>jet fuel</b>, da aviação. A <b>nafta</b> é "
+        "matéria-prima da petroquímica (plásticos); o <b>GLP</b> atende cozinha e "
+        "petroquímica; o <b>óleo combustível</b> fica com os navios e a geração elétrica "
+        "residual. <b>Product supplied</b> é a métrica com que a EIA aproxima a demanda: "
+        "o volume que saiu do sistema primário para o mercado."),
     "Refino por derivado": (
-        "<b>Como ler esta aba.</b> Refinaria transforma cru em derivados — e a geografia "
-        "do refino define os fluxos de comércio: os países que refinam além do próprio "
-        "consumo (EUA, Índia, Coreia, Golfo) exportam derivados para quem fechou "
-        "refinarias (Europa, América Latina, África). Os dados são o <b>refinery gross "
-        "output</b> do JODI: produção bruta das refinarias por produto, mensal, "
-        "auto-reportada — Rússia parou de reportar em 2023 e Brasil em 2022, e as linhas "
-        "terminam onde o reporte termina."),
+        "<b>Como ler esta aba.</b> A refinaria transforma o cru em derivados — e a "
+        "geografia do refino define os fluxos de comércio: países que refinam além do "
+        "próprio consumo (EUA, Índia, Coreia, Golfo) exportam derivados para os que "
+        "fecharam refinarias (Europa, América Latina, África). Os dados são o <b>refinery "
+        "gross output</b> do JODI: a produção bruta das refinarias por produto, mensal e "
+        "auto-reportada. A Rússia parou de reportar em 2023 e o Brasil em 2022 — as "
+        "linhas terminam onde o reporte termina."),
     "Fertilizantes": (
-        "<b>Como ler esta aba.</b> Fertilizante nitrogenado é, economicamente, um derivado "
-        "do <b>gás natural</b>: a amônia (processo Haber-Bosch) usa o gás como matéria-prima "
-        "e energia — na China, a rota dominante é via carvão. Por isso o preço do gás "
-        "europeu define a competitividade da química da região (no choque de 2022, plantas "
-        "de amônia fecharam em cascata — visível no painel do gás da química). <b>N</b> = "
-        "nutriente nitrogênio contido no fertilizante (FAOSTAT/ONU, anual). O painel do "
-        "Brasil mostra a distância entre o que o agro usa e o que o país produz — a "
-        "dependência de importação, majoritariamente da Rússia e do Golfo."),
+        "<b>Como ler esta aba.</b> O fertilizante nitrogenado é, economicamente, um "
+        "derivado do <b>gás natural</b>: a amônia (processo Haber-Bosch) usa o gás como "
+        "matéria-prima e como energia — na China, a rota dominante é o carvão. Por isso o "
+        "preço do gás europeu define a competitividade da química da região: no choque de "
+        "2022, plantas de amônia fecharam em cascata, movimento visível no painel do gás "
+        "da química. <b>N</b> é o nutriente nitrogênio contido no fertilizante "
+        "(FAOSTAT/ONU, anual). O painel do Brasil mostra a distância entre o que o agro "
+        "usa e o que o país produz — a dependência de importação, vinda sobretudo da "
+        "Rússia e do Golfo."),
     "Matriz Alemanha": (
         "<b>Como ler esta aba.</b> A Alemanha é o laboratório da transição elétrica "
-        "(<b>Energiewende</b>): saiu da nuclear (último reator em abril/2023), está saindo "
-        "do carvão e dobrou a aposta em eólica e solar. O <b>preço day-ahead</b> é o leilão "
-        "do dia seguinte na zona <b>DE-LU</b> (Alemanha+Luxemburgo): renovável entra no "
-        "sistema a custo marginal ~zero, então dias de vento e sol forte derrubam o preço "
-        "(às vezes para negativo) e comprimem as térmicas — a competição entre fontes "
-        "acontecendo em tempo real."),
+        "(<b>Energiewende</b>): desligou a nuclear (último reator em abril de 2023), está "
+        "saindo do carvão e dobrou a aposta em eólica e solar. O <b>preço day-ahead</b> é "
+        "o do leilão do dia seguinte na zona <b>DE-LU</b> (Alemanha e Luxemburgo). Como a "
+        "renovável entra no sistema a custo marginal próximo de zero, dias de muito vento "
+        "e sol derrubam o preço — às vezes para o campo negativo — e comprimem as "
+        "térmicas: é a competição entre fontes acontecendo em tempo real."),
     "Matriz Europa": (
-        "<b>Como ler esta aba.</b> Eletricidade não viaja bem entre continentes — cada "
-        "zona tem seu preço, e as diferenças revelam a matriz de cada país: França barata "
-        "quando o parque nuclear opera bem; Polônia cara e presa ao carvão; Espanha "
-        "achatada pela solar; Itália atrelada ao gás. As interconexões arbitram parte da "
-        "diferença, mas o gargalo físico mantém os spreads. Dados da <b>ENTSO-E</b> (a "
-        "associação dos operadores de rede europeus) — geração realizada por fonte e "
-        "preços day-ahead por zona."),
+        "<b>Como ler esta aba.</b> Eletricidade não viaja bem entre continentes: cada "
+        "zona tem o seu preço, e as diferenças revelam a matriz de cada país — a França "
+        "fica barata quando o parque nuclear opera bem; a Polônia, cara e presa ao "
+        "carvão; a Espanha é achatada pela solar; a Itália, atrelada ao gás. As "
+        "interconexões arbitram parte da diferença, mas o gargalo físico sustenta os "
+        "spreads. Os dados são da <b>ENTSO-E</b>, a associação dos operadores de rede "
+        "europeus: geração realizada por fonte e preços day-ahead por zona."),
     "Brasil": (
-        "<b>Como ler esta aba.</b> A matriz brasileira é hidro-dominante, então o "
-        "\"estoque\" do sistema é água: <b>EAR</b> (Energia Armazenada) mede quanto os "
-        "reservatórios guardam, em % do máximo; <b>ENA</b> (Energia Natural Afluente) é a "
-        "chuva que virou vazão, medida contra a <b>MLT</b> (média de longo termo — 100% = "
-        "chuva típica). <b>PLD</b> (Preço de Liquidação das Diferenças, CCEE) é o preço "
-        "spot horário por submercado; <b>CMO</b> (Custo Marginal de Operação, ONS) é o "
-        "custo da próxima unidade despachada — os dois sobem quando o reservatório cai e a "
-        "térmica entra. <b>SIN</b> = Sistema Interligado Nacional; <b>MWmed</b> = potência "
-        "média no período. Produção de petróleo: ANP (a fonte primária — o Brasil não "
-        "reporta mais ao JODI); consumo de eletricidade por classe: EPE."),
+        "<b>Como ler esta aba.</b> A matriz brasileira é hidro-dominante — o "
+        "\"estoque\" do sistema é água. A <b>EAR</b> (Energia Armazenada) mede quanto os "
+        "reservatórios guardam, em porcentagem do máximo; a <b>ENA</b> (Energia Natural "
+        "Afluente) é a chuva que virou vazão, medida contra a <b>MLT</b> (média de longo "
+        "termo — 100% significa chuva típica). O <b>PLD</b> (Preço de Liquidação das "
+        "Diferenças, da CCEE) é o preço spot horário por submercado; o <b>CMO</b> (Custo "
+        "Marginal de Operação, do ONS) é o custo da próxima unidade despachada — ambos "
+        "sobem quando o reservatório cai e a térmica entra. <b>SIN</b> é o Sistema "
+        "Interligado Nacional; <b>MWmed</b>, a potência média no período. A produção de "
+        "petróleo vem da ANP, a fonte primária (o Brasil não reporta mais ao JODI); o "
+        "consumo de eletricidade por classe, da EPE."),
     "Shale EUA": (
         "<b>Como ler esta aba.</b> O shale (óleo e gás de xisto) mudou o mercado por ter "
         "<b>ciclo curto</b>: entre a decisão de perfurar e o barril produzido passam-se "
@@ -907,20 +912,22 @@ NOTAS_ABA = {
         "Baker Hughes e pela produção semanal na aba Óleo &amp; Gás."),
     "Gás Europa": (
         "<b>Como ler esta aba.</b> O gás natural não tem preço único mundial: cada região "
-        "tem seu hub de referência — <b>Henry Hub</b> (EUA, na aba Óleo &amp; Gás global), "
-        "<b>TTF</b> (Holanda, referência de preço da Europa — sem fonte primária gratuita, "
-        "por isso não exibido) e <b>JKM</b> (Ásia). Quem conecta os três mercados é o "
-        "<b>GNL</b> (gás natural liquefeito): gás resfriado a −162 °C para viajar de navio — "
-        "foi a liquefação que transformou o gás de mercado regional em commodity global. "
-        "<br><b>AGSI</b> (Aggregated Gas Storage Inventory, da GIE, associação dos operadores "
-        "europeus de infraestrutura) mede os estoques de gás da Europa. O <b>% cheio</b> é o "
-        "seguro do inverno: a UE mira ~90% no início de novembro — abaixo da banda dos anos "
-        "anteriores, o mercado precifica risco de escassez. A <b>injeção líquida</b> mostra o "
-        "ritmo sazonal: no verão injeta-se (enche), no inverno retira-se; injeção fraca no "
-        "verão é sinal amarelo. <b>ALSI</b> (Aggregated LNG Storage Inventory) cobre os "
-        "terminais de GNL: o <b>send-out</b> é o volume regaseificado entregue à rede — mede "
-        "quanto GNL importado (EUA, Catar...) está suprindo a Europa; send-out alto = Europa "
-        "puxando navios e competindo com a Ásia, o elo direto com o Henry Hub."),
+        "tem seu hub de referência — o <b>Henry Hub</b> nos EUA (na aba Óleo &amp; Gás "
+        "global), o <b>TTF</b> na Holanda, referência de preço da Europa (sem fonte "
+        "primária gratuita, por isso não exibido), e o <b>JKM</b> na Ásia. Quem conecta "
+        "os três mercados é o <b>GNL</b> (gás natural liquefeito), o gás resfriado a "
+        "−162 °C para viajar de navio — foi a liquefação que transformou o gás de "
+        "mercado regional em commodity global.<br>O <b>AGSI</b> (Aggregated Gas Storage "
+        "Inventory, da GIE, associação dos operadores europeus de infraestrutura) mede "
+        "os estoques de gás da Europa. O <b>% cheio</b> é o seguro do inverno: a UE mira "
+        "cerca de 90% no início de novembro, e um nível abaixo da banda dos anos "
+        "anteriores faz o mercado precificar risco de escassez. A <b>injeção líquida</b> "
+        "mostra o ritmo sazonal — no verão injeta-se (enche), no inverno retira-se; "
+        "injeção fraca no verão é sinal amarelo. O <b>ALSI</b> (Aggregated LNG Storage "
+        "Inventory) cobre os terminais de GNL: o <b>send-out</b> é o volume regaseificado "
+        "entregue à rede e mede quanto GNL importado (dos EUA, do Catar...) está suprindo "
+        "a Europa. Send-out alto significa Europa puxando navios e competindo com a Ásia "
+        "— o elo direto com o Henry Hub."),
 }
 
 gerado_em = datetime.now(timezone.utc).astimezone().strftime("%d/%m/%Y %H:%M")
