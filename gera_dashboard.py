@@ -109,6 +109,57 @@ def kpi_fut(sid, label):
             "data": m("hora") or d}
 
 
+# ---------------------------------------------------------------- Introdução
+# Parágrafo editorial da página inicial (EDITÁVEL — datar sempre que revisar).
+# As métricas abaixo dele são calculadas do banco e se atualizam sozinhas.
+INTRO_DATA = "23/07/2026"
+INTRO_TITULO = "O choque do Golfo e a nova fiação do mercado"
+INTRO_TEXTO = (
+    "A guerra no Irã fez o mercado precificar o risco do Estreito de Ormuz — por onde "
+    "passa cerca de um quinto do petróleo mundial — e o Brent voltou aos três dígitos. "
+    "Mas o pior cenário não se materializou, e as razões aparecem nos painéis abaixo: "
+    "o choque é assimétrico (o spread Brent–WTI se abriu porque o barril do Atlântico é "
+    "o que falta, enquanto o shale americano — o produtor marginal da última década — "
+    "segue entregando), o amortecimento está sendo feito por estoques (o mundo queima "
+    "reservas no ritmo mais forte desde 2021, com a SPR americana pela metade), e a "
+    "resposta da oferta ainda não começou: os rigs de perfuração, que antecedem a "
+    "produção do shale em 6–9 meses, mal saíram do lugar. No gás, a Europa atravessa o "
+    "choque com armazenamento em ritmo normal de enchimento — a fiação nova do GNL "
+    "fazendo o trabalho que Ormuz ameaça interromper.")
+
+
+def _intro_metricas():
+    """Métricas do lede, calculadas do banco (auto-atualizam a cada geração)."""
+    out = []
+    def ult(sid):
+        return ultimo(sid)
+    d_b, brent = ult("fut_brent")
+    d_w, wti = ult("fut_wti")
+    if brent and wti:
+        out.append(("Brent", f"{brent:.2f} USD/b".replace(".", ","), f"futuro, {d_b[8:10]}/{d_b[5:7]}"))
+        out.append(("Spread Brent–WTI", f"+{brent - wti:.2f} USD".replace(".", ","),
+                    "choque concentrado no Atlântico"))
+    prod = dict(q("eia_mundo_liq_prod", "2026-01-01"))
+    cons = dict(q("eia_mundo_liq_cons", "2026-01-01"))
+    comuns = sorted(set(prod) & set(cons))
+    if comuns:
+        m = comuns[-1]
+        out.append(("Queima de estoque", f"{prod[m] - cons[m]:+.1f} Mb/d".replace(".", ","),
+                    f"oferta−demanda, {m[5:7]}/{m[:4]} (STEO)"))
+    d_s, spr = ult("eia_crude_estoque_spr")
+    pico = con.execute("SELECT MAX(valor) FROM dados WHERE serie_id='eia_crude_estoque_spr'").fetchone()[0]
+    if spr:
+        out.append(("SPR americana", f"{spr/1000:.0f} Mb", f"{100*spr/pico:.0f}% do pico histórico"))
+    d_r, rigs = ult("bh_us_rigs_oil")
+    if rigs:
+        out.append(("Rigs de óleo EUA", f"{rigs:.0f}", f"semana de {d_r[8:10]}/{d_r[5:7]}"))
+    d_g, gas = ult("agsi_eu_cheio_pct")
+    if gas:
+        out.append(("Gás UE armazenado", f"{gas:.1f}%".replace(".", ","),
+                    f"gas day {d_g[8:10]}/{d_g[5:7]}"))
+    return out
+
+
 KPIS = [
     kpi_fut("fut_wti", "WTI futuro"),
     kpi_fut("fut_brent", "Brent futuro"),
@@ -851,6 +902,15 @@ footer{margin-top:18px;font-size:11.5px;color:var(--muted)}
 .disclaimer{background:var(--card);border:1px solid var(--border);border-radius:10px;
   padding:12px 16px;line-height:1.6;font-size:11.5px;color:var(--muted)}
 .disclaimer b{color:var(--ink)}
+.intro{background:linear-gradient(135deg,#1a1f2e,#141927);border:1px solid var(--border);
+  border-left:3px solid var(--ouro);border-radius:12px;padding:14px 18px;margin:12px 0 4px}
+.intro-cab{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.intro-titulo{font-size:15.5px;font-weight:700;color:var(--ouro)}
+.intro-data{font-size:11px;color:var(--muted)}
+.intro p{margin:8px 0 10px;font-size:13px;line-height:1.65;color:var(--ink)}
+.intro-metricas{display:flex;flex-wrap:wrap;gap:16px}
+.intro-metricas span{font-size:12px;color:var(--muted)}
+.intro-metricas b{color:var(--ink);font-size:13px}
 .rolagem{overflow-x:auto}
 .card-tabela{grid-column:1/-1}
 .card-tabela table{max-width:900px;margin:0 auto}
@@ -864,6 +924,12 @@ table.tab-g td{padding:4px 8px}
 <div class="sub">EIA · GIE AGSI/ALSI · SMARD/Bundesnetzagentur · ONS · CCEE · ANP · EPE · JODI · CFTC · Baker Hughes
  &nbsp;|&nbsp; gerado em __GERADO__ &nbsp;|&nbsp; cada painel indica fonte e frequência</div></div>
 </header>
+<div class="intro">
+<div class="intro-cab"><span class="intro-titulo">__INTRO_TITULO__</span>
+<span class="intro-data">contexto editorial · __INTRO_DATA__</span></div>
+<p>__INTRO_TEXTO__</p>
+<div class="intro-metricas">__INTRO_METRICAS__</div>
+</div>
 <div class="kpis" id="kpis"></div>
 <div class="tabs" id="tabs"></div>
 <div id="conteudo"></div>
@@ -1026,7 +1092,14 @@ mostra(0);
 window.addEventListener("resize",()=>{const on=[...tabs.children].findIndex(b=>b.classList.contains("on"));if(on>=0)mostra(on)});
 </script></body></html>"""
 
-html = (HTML.replace("__KPIS__", json.dumps(KPIS, ensure_ascii=False))
+_metricas_html = "".join(
+    f'<span><b>{v}</b> {label} <i style="font-style:normal">· {nota}</i></span>'
+    for label, v, nota in _intro_metricas())
+html = (HTML.replace("__INTRO_TITULO__", INTRO_TITULO)
+            .replace("__INTRO_DATA__", INTRO_DATA)
+            .replace("__INTRO_TEXTO__", INTRO_TEXTO)
+            .replace("__INTRO_METRICAS__", _metricas_html)
+            .replace("__KPIS__", json.dumps(KPIS, ensure_ascii=False))
             .replace("__CH__", json.dumps(CH, ensure_ascii=False))
             .replace("__ABAS__", json.dumps(ABAS, ensure_ascii=False))
             .replace("__NOTAS__", json.dumps(NOTAS_ABA, ensure_ascii=False))

@@ -53,6 +53,15 @@ footer{margin-top:18px;font-size:11.5px;color:var(--muted)}
 .disclaimer{background:var(--card);border:1px solid var(--border);border-radius:10px;
   padding:12px 16px;line-height:1.6;font-size:11.5px;color:var(--muted)}
 .disclaimer b{color:var(--ink)}
+.intro{background:linear-gradient(135deg,#1a1f2e,#141927);border:1px solid var(--border);
+  border-left:3px solid var(--ouro);border-radius:12px;padding:14px 18px;margin:12px 0 4px}
+.intro-cab{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.intro-titulo{font-size:15.5px;font-weight:700;color:var(--ouro)}
+.intro-data{font-size:11px;color:var(--muted)}
+.intro p{margin:8px 0 10px;font-size:13px;line-height:1.65;color:var(--ink)}
+.intro-metricas{display:flex;flex-wrap:wrap;gap:16px}
+.intro-metricas span{font-size:12px;color:var(--muted)}
+.intro-metricas b{color:var(--ink);font-size:13px}
 .rolagem{overflow-x:auto}
 .card-tabela{grid-column:1/-1}
 .card-tabela table{max-width:900px;margin:0 auto}
@@ -64,8 +73,14 @@ table.tab-g td{padding:4px 8px}
 <header><span class="logo">ASIF</span>
 <div><h1>Energia Global — fontes primárias</h1>
 <div class="sub">EIA · GIE AGSI/ALSI · SMARD/Bundesnetzagentur · ONS · CCEE · ANP · EPE · JODI · CFTC · Baker Hughes
- &nbsp;|&nbsp; gerado em 23/07/2026 14:03 &nbsp;|&nbsp; cada painel indica fonte e frequência</div></div>
+ &nbsp;|&nbsp; gerado em 23/07/2026 14:14 &nbsp;|&nbsp; cada painel indica fonte e frequência</div></div>
 </header>
+<div class="intro">
+<div class="intro-cab"><span class="intro-titulo">O choque do Golfo e a nova fiação do mercado</span>
+<span class="intro-data">contexto editorial · 23/07/2026</span></div>
+<p>A guerra no Irã fez o mercado precificar o risco do Estreito de Ormuz — por onde passa cerca de um quinto do petróleo mundial — e o Brent voltou aos três dígitos. Mas o pior cenário não se materializou, e as razões aparecem nos painéis abaixo: o choque é assimétrico (o spread Brent–WTI se abriu porque o barril do Atlântico é o que falta, enquanto o shale americano — o produtor marginal da última década — segue entregando), o amortecimento está sendo feito por estoques (o mundo queima reservas no ritmo mais forte desde 2021, com a SPR americana pela metade), e a resposta da oferta ainda não começou: os rigs de perfuração, que antecedem a produção do shale em 6–9 meses, mal saíram do lugar. No gás, a Europa atravessa o choque com armazenamento em ritmo normal de enchimento — a fiação nova do GNL fazendo o trabalho que Ormuz ameaça interromper.</p>
+<div class="intro-metricas"><span><b>100,67 USD/b</b> Brent <i style="font-style:normal">· futuro, 23/07</i></span><span><b>+8,27 USD</b> Spread Brent–WTI <i style="font-style:normal">· choque concentrado no Atlântico</i></span><span><b>-2,3 Mb/d</b> Queima de estoque <i style="font-style:normal">· oferta−demanda, 07/2026 (STEO)</i></span><span><b>311 Mb</b> SPR americana <i style="font-style:normal">· 43% do pico histórico</i></span><span><b>452</b> Rigs de óleo EUA <i style="font-style:normal">· semana de 17/07</i></span><span><b>54,4%</b> Gás UE armazenado <i style="font-style:normal">· gas day 21/07</i></span></div>
+</div>
 <div class="kpis" id="kpis"></div>
 <div class="tabs" id="tabs"></div>
 <div id="conteudo"></div>
