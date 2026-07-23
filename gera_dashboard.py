@@ -16,6 +16,36 @@ COR = {"verde": "#3aa15f", "azul": "#4590c9", "carvao": "#b3673a",
        "teal": "#21a38f", "ouro": "#b98a2e", "roxo": "#9673d6",
        "rose": "#e25d75", "cinza": "#718096"}
 
+# Cor fixa POR PAÍS (identidade consistente entre gráficos). Com 8 cores para
+# ~25 países há reuso entre países que raramente aparecem juntos; dentro de um
+# mesmo gráfico a unicidade é garantida por fallback determinístico (por rank).
+COR_PAIS = {
+    "EUA": "azul", "China": "rose", "Índia": "ouro", "Japão": "roxo",
+    "Coreia do Sul": "teal", "Arábia Saudita": "carvao", "Rússia": "cinza",
+    "Brasil": "verde", "Alemanha": "carvao", "França": "roxo",
+    "Espanha": "verde", "Itália": "rose", "Itália N": "rose",
+    "Holanda": "teal", "Polônia": "cinza", "UE-27": "ouro",
+    "Canadá": "verde", "México": "ouro", "Indonésia": "teal",
+    "Tailândia": "roxo", "Egito": "carvao", "Paquistão": "cinza",
+    "Catar": "verde", "Nigéria": "rose", "Guiana": "verde",
+    "Emirados": "ouro", "Reino Unido": "verde", "Singapura": "ouro",
+}
+_POOL_CORES = [COR[c] for c in
+               ["azul", "verde", "ouro", "roxo", "teal", "rose", "carvao", "cinza"]]
+
+
+def atribui_cores(nomes):
+    """Hex por país: preferência do COR_PAIS; colisão no gráfico -> 1ª cor livre."""
+    usadas, out = set(), []
+    for n in nomes:
+        base = n.split(" (")[0]  # "Rússia (até 2023)" -> "Rússia"
+        pref = COR.get(COR_PAIS.get(base, ""))
+        cor = pref if pref and pref not in usadas else \
+            next(c for c in _POOL_CORES if c not in usadas)
+        usadas.add(cor)
+        out.append(cor)
+    return out
+
 con = sqlite3.connect(DB_PATH)
 
 
@@ -337,9 +367,10 @@ def _top_refino(grupo, n=6):
             recentes = [v for _, v in pares[-12:]]
             rank.append((sum(recentes) / len(recentes), cc, pares))
     rank.sort(reverse=True)
-    return [{"label": NOME_PAIS.get(cc, cc), "cor": COR[CORES_LINHAS[i]],
-             "data": compacta(pares)}
-            for i, (_m, cc, pares) in enumerate(rank[:n])]
+    nomes = [NOME_PAIS.get(cc, cc) for _m, cc, _p in rank[:n]]
+    cores = atribui_cores(nomes)
+    return [{"label": nomes[i], "cor": cores[i], "data": compacta(pares)}
+            for i, (_m, _cc, pares) in enumerate(rank[:n])]
 
 REFINO_GRUPOS = [("total", "derivados totais"), ("gasolina", "gasolina"),
                  ("diesel_gasoleo", "diesel/gasóleo"), ("jet", "jet fuel"),
@@ -367,9 +398,10 @@ def _top_fao(elemento, n=6, obrigatorios=()):
         if ob not in [cc for _, cc, _ in top]:
             extra = [r for r in rank if r[1] == ob]
             top = top[:n - 1] + extra
-    return [{"label": NOME_PAIS.get(cc.upper(), cc.upper()),
-             "cor": COR[CORES_LINHAS[i % 6]], "data": compacta(pares)}
-            for i, (_v, cc, pares) in enumerate(top)]
+    nomes = [NOME_PAIS.get(cc.upper(), cc.upper()) for _v, cc, _p in top]
+    cores = atribui_cores(nomes)
+    return [{"label": nomes[i], "cor": cores[i], "data": compacta(pares)}
+            for i, (_v, _cc, pares) in enumerate(top)]
 
 CH["fert_prod"] = {
     "titulo": "Quem produz fertilizante nitrogenado", "unidade": "mil t N/ano",
@@ -390,13 +422,11 @@ CH["fert_gas"] = {
     "titulo": "Gás consumido pela química europeia (inclui amônia)",
     "unidade": "TWh/ano",
     "fonte": "Eurostat nrg_bal_c (anual, consumo final do setor químico/petroquímico)",
-    "series": [
-        serie("euro_gas_quimica_eu27", "UE-27", "ouro"),
-        serie("euro_gas_quimica_de", "Alemanha", "azul"),
-        serie("euro_gas_quimica_nl", "Holanda", "verde"),
-        serie("euro_gas_quimica_fr", "França", "roxo"),
-        serie("euro_gas_quimica_it", "Itália", "teal"),
-        serie("euro_gas_quimica_pl", "Polônia", "rose")]}
+    "series": [serie(sid, label, cor) for (sid, label), cor in zip(
+        [("euro_gas_quimica_eu27", "UE-27"), ("euro_gas_quimica_de", "Alemanha"),
+         ("euro_gas_quimica_nl", "Holanda"), ("euro_gas_quimica_fr", "França"),
+         ("euro_gas_quimica_it", "Itália"), ("euro_gas_quimica_pl", "Polônia")],
+        atribui_cores(["UE-27", "Alemanha", "Holanda", "França", "Itália", "Polônia"]))]}
 
 # --- Aba 1: Óleo & Gás ---
 CH["precos_oleo"] = {
@@ -444,20 +474,18 @@ CH["cftc"] = {
 CH["jodi_prod"] = {
     "titulo": "Produção de crude — maiores produtores (JODI, auto-reportado)",
     "unidade": "mil b/d", "fonte": "JODI-Oil (mensal, defasagem ~2m; Rússia parou de reportar em 2023)",
-    "series": [
-        serie("jodi_prod_US", "EUA", "azul", "2010-01-01"),
-        serie("jodi_prod_SA", "Arábia Saudita", "ouro", "2010-01-01"),
-        serie("jodi_prod_RU", "Rússia (até 2023)", "cinza", "2010-01-01"),
-        serie("jodi_prod_CA", "Canadá", "teal", "2010-01-01"),
-        serie("jodi_prod_CN", "China", "rose", "2010-01-01")]}
+    "series": [serie(sid, label, cor, "2010-01-01") for (sid, label), cor in zip(
+        [("jodi_prod_US", "EUA"), ("jodi_prod_SA", "Arábia Saudita"),
+         ("jodi_prod_RU", "Rússia (até 2023)"), ("jodi_prod_CA", "Canadá"),
+         ("jodi_prod_CN", "China")],
+        atribui_cores(["EUA", "Arábia Saudita", "Rússia", "Canadá", "China"]))]}
 CH["jodi_dem"] = {
     "titulo": "Demanda de derivados — maiores consumidores (JODI)",
-    "unidade": "mil b/d", "fonte": "JODI-Oil secundário (mensal)", "series": [
-        serie("jodi_dem_US", "EUA", "azul", "2010-01-01"),
-        serie("jodi_dem_CN", "China", "rose", "2010-01-01"),
-        serie("jodi_dem_IN", "Índia", "ouro", "2010-01-01"),
-        serie("jodi_dem_JP", "Japão", "roxo", "2010-01-01"),
-        serie("jodi_dem_DE", "Alemanha", "verde", "2010-01-01")]}
+    "unidade": "mil b/d", "fonte": "JODI-Oil secundário (mensal)",
+    "series": [serie(sid, label, cor, "2010-01-01") for (sid, label), cor in zip(
+        [("jodi_dem_US", "EUA"), ("jodi_dem_CN", "China"), ("jodi_dem_IN", "Índia"),
+         ("jodi_dem_JP", "Japão"), ("jodi_dem_DE", "Alemanha")],
+        atribui_cores(["EUA", "China", "Índia", "Japão", "Alemanha"]))]}
 
 # --- Aba 2: Gás Europa ---
 def agsi_por_ano(sid, anos, cores):
@@ -479,11 +507,11 @@ CH["agsi_anos"] = {
     "eixo_doy": True}
 CH["agsi_paises"] = {
     "titulo": "Armazenamento por país — % cheio", "unidade": "%",
-    "fonte": "GIE AGSI+ (diário)", "series": [
-        serie("agsi_de_cheio_pct", "Alemanha", "ouro", "2023-01-01"),
-        serie("agsi_it_cheio_pct", "Itália", "verde", "2023-01-01"),
-        serie("agsi_nl_cheio_pct", "Holanda", "rose", "2023-01-01"),
-        serie("agsi_fr_cheio_pct", "França", "azul", "2023-01-01")]}
+    "fonte": "GIE AGSI+ (diário)",
+    "series": [serie(sid, label, cor, "2023-01-01") for (sid, label), cor in zip(
+        [("agsi_de_cheio_pct", "Alemanha"), ("agsi_it_cheio_pct", "Itália"),
+         ("agsi_nl_cheio_pct", "Holanda"), ("agsi_fr_cheio_pct", "França")],
+        atribui_cores(["Alemanha", "Itália", "Holanda", "França"]))]}
 fluxo = [(d, v) for d, v in q("agsi_eu_injecao", "2023-01-01")]
 ret = dict(q("agsi_eu_retirada", "2023-01-01"))
 CH["agsi_fluxo"] = {
@@ -571,13 +599,11 @@ CH["de_carga"] = {
 CH["eu_precos"] = {
     "titulo": "Preços day-ahead — zonas europeias", "unidade": "EUR/MWh",
     "fonte": "ENTSO-E A44 (FR/ES/IT-N/NL/PL) + SMARD (DE-LU); média diária dos intervalos",
-    "zero": True, "series": [
-        serie("entsoe_preco_da_fr", "França", "azul"),
-        serie("entsoe_preco_da_es", "Espanha", "verde"),
-        serie("entsoe_preco_da_itn", "Itália N", "rose"),
-        serie("entsoe_preco_da_nl", "Holanda", "roxo"),
-        serie("entsoe_preco_da_pl", "Polônia", "carvao"),
-        serie("smard_de_preco_da", "DE-LU", "ouro")]}
+    "zero": True, "series": [serie(sid, label, cor) for (sid, label), cor in zip(
+        [("entsoe_preco_da_fr", "França"), ("entsoe_preco_da_es", "Espanha"),
+         ("entsoe_preco_da_itn", "Itália N"), ("entsoe_preco_da_nl", "Holanda"),
+         ("entsoe_preco_da_pl", "Polônia"), ("smard_de_preco_da", "DE-LU")],
+        atribui_cores(["França", "Espanha", "Itália N", "Holanda", "Polônia", "Alemanha"]))]}
 
 GRUPOS_EU = [("eolica", "Eólica", "verde"), ("hidro", "Hídrica", "azul"),
              ("carvao", "Carvão", "carvao"), ("biomassa", "Biomassa", "teal"),
