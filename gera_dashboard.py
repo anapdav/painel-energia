@@ -1175,7 +1175,7 @@ function tabela(id){
 }
 mostra(0);
 window.addEventListener("resize",()=>{const on=[...tabs.children].findIndex(b=>b.classList.contains("on"));if(on>=0)mostra(on)});
-</script></body></html>"""
+</script><script data-goatcounter="https://anapdav.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script></body></html>"""
 
 _metricas_html = "".join(
     f'<span><b>{v}</b> {label} <i style="font-style:normal">· {nota}</i></span>'
