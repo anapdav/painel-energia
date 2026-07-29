@@ -29,6 +29,13 @@ SERIES = [
      "EU", "crude", "Brent spot Europa", "USD/barril"),
     ("eia_henryhub_spot", "natural-gas/pri/fut", "RNGWHHD", "daily",
      "US", "gas_natural", "Henry Hub spot", "USD/MMBtu"),
+    # --- Derivados spot (base do crack spread; USD/galão na fonte) ---
+    ("eia_diesel_spot_gal", "petroleum/pri/spt", "EER_EPD2DXL0_PF4_RGC_DPG", "daily",
+     "US", "destilados", "Diesel ULSD spot, Costa do Golfo EUA", "USD/galão"),
+    ("eia_gasolina_spot_gal", "petroleum/pri/spt", "EER_EPMRU_PF4_RGC_DPG", "daily",
+     "US", "gasolina", "Gasolina convencional spot, Costa do Golfo EUA", "USD/galão"),
+    ("eia_jet_spot_gal", "petroleum/pri/spt", "EER_EPJK_PF4_RGC_DPG", "daily",
+     "US", "jet", "Jet fuel spot, Costa do Golfo EUA", "USD/galão"),
     # --- Gás natural: estoques semanais (quinta 10:30 ET) ---
     ("eia_gas_estoque_us", "natural-gas/stor/wkly", "NW2_EPG0_SWO_R48_BCF", "weekly",
      "US", "gas_natural", "Working gas em estoque, Lower 48", "Bcf"),

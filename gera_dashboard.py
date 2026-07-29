@@ -517,6 +517,37 @@ CH["gas_estoque_us"] = {
     "titulo": "Working gas em estoque — Lower 48", "unidade": "Bcf",
     "fonte": "EIA (semanal, quinta 10:30 ET)", "series": [
         serie("eia_gas_estoque_us", "Lower 48", "teal", "2015-01-01")]}
+# --- Crack spreads: margem bruta de refino (produto − cru) ---
+# Convenção: produto USD/galão × 42 = USD/barril, menos Brent spot (mesma fonte
+# e mesma data — ambos EIA spot). 3-2-1 = (2 gasolina + 1 diesel)/3, a proporção
+# de refino padrão americana.
+GAL_POR_BBL = 42.0
+_brent = dict(q("eia_brent_spot", "2015-01-01"))
+_crack = {}
+for sid_prod, nome in [("eia_diesel_spot_gal", "diesel"),
+                       ("eia_gasolina_spot_gal", "gasolina"),
+                       ("eia_jet_spot_gal", "jet")]:
+    _crack[nome] = {d: v * GAL_POR_BBL - _brent[d]
+                    for d, v in q(sid_prod, "2015-01-01") if d in _brent}
+_c321 = {d: (2 * _crack["gasolina"][d] + _crack["diesel"][d]) / 3
+         for d in _crack["diesel"] if d in _crack["gasolina"]}
+
+CH["cracks"] = {
+    "titulo": "Quanto a refinaria ganha por barril — margem de refino (crack spread)",
+    "unidade": "USD/barril",
+    "fonte": "Calculado: preço spot do derivado (EIA, Costa do Golfo, USD/galão × 42) "
+             "menos Brent spot. O 3-2-1 pondera 2 de gasolina para 1 de diesel, "
+             "a proporção típica de uma refinaria americana",
+    "zero": True, "series": [
+        {"label": "Diesel (ULSD)", "cor": COR["azul"],
+         "data": compacta(sorted(_crack["diesel"].items()))},
+        {"label": "Gasolina", "cor": COR["ouro"],
+         "data": compacta(sorted(_crack["gasolina"].items()))},
+        {"label": "Jet fuel", "cor": COR["roxo"],
+         "data": compacta(sorted(_crack["jet"].items()))},
+        {"label": "3-2-1 (cesta)", "cor": COR["cinza"],
+         "data": compacta(sorted(_c321.items()))}]}
+
 CH["cftc"] = {
     "titulo": "Managed money net — WTI e Henry Hub", "unidade": "mil contratos",
     "fonte": "CFTC CoT desagregado (terça, divulga sexta)", "zero": True, "series": [
@@ -784,9 +815,9 @@ ABAS = [
     ("Petróleo por produto", ["prod_dem_abs", "prod_dem_share", "prod_dem_us"]),
     ("Refino por derivado", [f"ref_{g}" for g, _ in REFINO_GRUPOS]),
     ("Fertilizantes", ["fert_prod", "fert_uso", "fert_brasil", "fert_gas"]),
-    ("Óleo & Gás global", ["precos_oleo", "hh", "estoques_us", "cushing_spr",
-                           "prod_us", "rigs", "gas_estoque_us", "cftc",
-                           "jodi_prod", "jodi_dem"]),
+    ("Óleo & Gás global", ["precos_oleo", "cracks", "hh", "estoques_us",
+                           "cushing_spr", "prod_us", "rigs", "gas_estoque_us",
+                           "cftc", "jodi_prod", "jodi_dem"]),
     ("Shale EUA", ["shale_estados", "rigs", "shale_oleo", "shale_gas",
                    "shale_produtividade", "shale_duc", "shale_atividade"]),
     ("Gás Europa", ["agsi_anos", "agsi_paises", "agsi_fluxo", "alsi"]),
@@ -837,7 +868,13 @@ NOTAS_ABA = {
         "o produtor marginal do mundo, de ciclo curto. <b>Managed money</b> (CFTC) é a "
         "posição líquida dos fundos nos mercados futuros, o termômetro do posicionamento "
         "especulativo: dado de terça, publicado na sexta. O <b>JODI</b> compila "
-        "estatísticas auto-reportadas pelos países — cobertura ampla, qualidade desigual."),
+        "estatísticas auto-reportadas pelos países — cobertura ampla, qualidade "
+        "desigual.<br>O <b>crack spread</b> é a margem bruta da refinaria: o preço do "
+        "derivado menos o do cru (o nome vem do <i>cracking</i>, o processo que quebra o "
+        "petróleo em produtos). Ele mede onde está o aperto — quando o crack se abre, a "
+        "escassez está na refinaria, não no poço, e o que chega ao consumidor sobe mais "
+        "do que o preço do barril sugere. É a variável que liga o petróleo à inflação: "
+        "no Brasil, via diesel, chega em frete e agro."),
     "Petróleo por produto": (
         "<b>Como ler esta aba.</b> Ninguém consome o barril de petróleo — consomem-se os "
         "derivados, e cada um conta uma história. A <b>gasolina</b> fala do consumidor "
