@@ -112,20 +112,19 @@ def kpi_fut(sid, label):
 # ---------------------------------------------------------------- Introdução
 # Parágrafo editorial da página inicial (EDITÁVEL — datar sempre que revisar).
 # As métricas abaixo dele são calculadas do banco e se atualizam sozinhas.
-INTRO_DATA = "23/07/2026"
-INTRO_TITULO = "O choque do Golfo e a nova fiação do mercado"
+INTRO_DATA = "29/07/2026"
+INTRO_TITULO = "O prêmio de guerra desinflou — a fiação nova aguentou"
 INTRO_TEXTO = (
-    "A guerra no Irã fez o mercado precificar o risco no Estreito de Ormuz — por onde "
-    "passa cerca de um quinto do petróleo mundial — e o Brent voltou aos três dígitos. "
-    "O pior cenário, porém, não se materializou, e as razões aparecem nos painéis "
-    "abaixo. O choque é assimétrico: o spread entre Brent e WTI se abriu porque o "
-    "barril que falta é o do Atlântico, enquanto o shale americano — o produtor "
-    "marginal da última década — segue entregando. O amortecimento vem dos estoques: o "
-    "mundo queima reservas no ritmo mais forte desde 2021, com a SPR americana pela "
-    "metade. E a resposta da oferta ainda não começou — os rigs de perfuração, que "
-    "antecedem a produção do shale em seis a nove meses, mal saíram do lugar. No gás, a "
-    "Europa atravessa o choque com o armazenamento enchendo em ritmo normal: é a nova "
-    "fiação do GNL fazendo o trabalho que Ormuz ameaça interromper.")
+    "Sem interrupção física em Ormuz, o prêmio de guerra saiu do preço quase tão rápido "
+    "quanto entrou: o Brent devolveu em uma semana o rali que o levara aos três dígitos "
+    "(de cerca de 101 para 88 dólares) e o spread sobre o WTI estreitou. A tese de "
+    "fundo do painel segue de pé — o choque não virou escassez porque a fiação do "
+    "mercado mudou: o shale americano, produtor marginal da última década, segue "
+    "entregando; os estoques fizeram o amortecimento (o mundo ainda queima reservas no "
+    "ritmo mais forte desde 2021, com a SPR americana pela metade); e o GNL manteve a "
+    "Europa enchendo o armazenamento em ritmo normal. Os próximos testes: o WPSR desta "
+    "quarta-feira (estoques americanos) e a resposta da perfuração — os rigs, que "
+    "antecedem a produção do shale em seis a nove meses, seguem parados.")
 
 
 def _intro_metricas():
