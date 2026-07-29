@@ -115,19 +115,18 @@ def kpi_fut(sid, label):
 INTRO_DATA = "29/07/2026"
 INTRO_TITULO = "O prêmio de guerra desinflou — a fiação nova aguentou"
 INTRO_TEXTO = (
-    "Sem interrupção física em Ormuz, o prêmio de guerra saiu do preço quase tão rápido "
-    "quanto entrou: o Brent devolveu em uma semana o rali que o levara aos três dígitos "
-    "(de cerca de 101 para 88 dólares) e o spread sobre o WTI estreitou. A tese de "
-    "fundo do painel segue de pé — o choque não virou escassez porque a fiação do "
-    "mercado mudou: o shale americano, produtor marginal da última década, segue "
-    "entregando; os estoques fizeram o amortecimento (o mundo ainda queima reservas no "
-    "ritmo mais forte desde 2021, com a SPR americana pela metade); e o GNL manteve a "
-    "Europa injetando gás em ritmo normal. O ponto de atenção está no nível, não no "
-    "ritmo: o armazenamento europeu tem 55,9% (27/07), o menor para a data desde 2021 e "
-    "17 pontos abaixo da média de 2018–2025 — a Europa entra no inverno com o colchão "
-    "mais fino em cinco anos. Os próximos testes: o WPSR desta quarta-feira (estoques "
-    "americanos) e a resposta da perfuração — os rigs, que antecedem a produção do shale "
-    "em seis a nove meses, seguem parados.")
+    "O prêmio de guerra saiu do preço quase tão rápido quanto entrou: o Brent devolveu "
+    "em uma semana o rali que o levara aos três dígitos (de cerca de 101 para 88 "
+    "dólares). O déficit, porém, é real — o mundo queimou 6,3 milhões de barris por dia "
+    "em maio, o ritmo mais forte desde 2021 —, e o que o absorveu aparece nos painéis "
+    "abaixo. Primeiro, a reserva estratégica americana: a SPR perdeu 102 milhões de "
+    "barris em 2026 e está em 311 Mb, 43% do pico histórico. Segundo, a resposta "
+    "privada, que já começou: os rigs de óleo saíram de 407 em abril para 450, alta de "
+    "11% que coloca barril novo do shale entre o fim de 2026 e meados de 2027. E o "
+    "déficit vem encolhendo desde maio (2,3 Mb/d em julho). O ponto de atenção agora é "
+    "o gás europeu — não pelo ritmo de injeção, que é normal, mas pelo nível: 55,9% em "
+    "27/07, o menor para a data desde 2021 e 17 pontos abaixo da média de 2018–2025. A "
+    "Europa entra no inverno com o colchão mais fino em cinco anos.")
 
 
 def _intro_metricas():
