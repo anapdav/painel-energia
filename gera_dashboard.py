@@ -122,9 +122,12 @@ INTRO_TEXTO = (
     "mercado mudou: o shale americano, produtor marginal da última década, segue "
     "entregando; os estoques fizeram o amortecimento (o mundo ainda queima reservas no "
     "ritmo mais forte desde 2021, com a SPR americana pela metade); e o GNL manteve a "
-    "Europa enchendo o armazenamento em ritmo normal. Os próximos testes: o WPSR desta "
-    "quarta-feira (estoques americanos) e a resposta da perfuração — os rigs, que "
-    "antecedem a produção do shale em seis a nove meses, seguem parados.")
+    "Europa injetando gás em ritmo normal. O ponto de atenção está no nível, não no "
+    "ritmo: o armazenamento europeu tem 55,9% (27/07), o menor para a data desde 2021 e "
+    "17 pontos abaixo da média de 2018–2025 — a Europa entra no inverno com o colchão "
+    "mais fino em cinco anos. Os próximos testes: o WPSR desta quarta-feira (estoques "
+    "americanos) e a resposta da perfuração — os rigs, que antecedem a produção do shale "
+    "em seis a nove meses, seguem parados.")
 
 
 def _intro_metricas():
