@@ -1,8 +1,8 @@
 # Gerador do dashboard Energia — lê energia.db e emite energia_dashboard.html
-# Estilo: dark ASIF (mesma identidade dos dashboards IPCA/Atividade).
-# Paleta categórica validada (CVD/contraste, modo escuro, superfície #1a1f2e):
-#   verde #3aa15f | azul #4590c9 | carvão #b3673a | teal #21a38f
-#   ouro #b98a2e | roxo #9673d6 | rose #e25d75
+# Estilo: fundo claro + logo ASIF (17/08/2026), tokens do design system
+# (ref. FX_Carry/gera_dashboard.py). Paleta categórica clara (ordem fixa):
+#   azul #2a78d6 | verde #1baf7a | ouro #eda100 | verde-escuro #008300
+#   roxo #4a3aa7 | rose/vermelho #e34948 | laranja #eb6834 | cinza #898781
 import json
 import sqlite3
 from collections import defaultdict
@@ -12,9 +12,9 @@ from config import DB_PATH, PASTA
 
 SAIDA = PASTA + "\\energia_dashboard.html"
 
-COR = {"verde": "#3aa15f", "azul": "#4590c9", "carvao": "#b3673a",
-       "teal": "#21a38f", "ouro": "#b98a2e", "roxo": "#9673d6",
-       "rose": "#e25d75", "cinza": "#718096"}
+COR = {"verde": "#1baf7a", "azul": "#2a78d6", "carvao": "#eb6834",
+       "teal": "#008300", "ouro": "#eda100", "roxo": "#4a3aa7",
+       "rose": "#e34948", "cinza": "#898781"}
 
 # Cor fixa POR PAÍS (identidade consistente entre gráficos). Com 8 cores para
 # ~25 países há reuso entre países que raramente aparecem juntos; dentro de um
@@ -112,21 +112,23 @@ def kpi_fut(sid, label):
 # ---------------------------------------------------------------- Introdução
 # Parágrafo editorial da página inicial (EDITÁVEL — datar sempre que revisar).
 # As métricas abaixo dele são calculadas do banco e se atualizam sozinhas.
-INTRO_DATA = "29/07/2026"
-INTRO_TITULO = "O prêmio de guerra desinflou — a fiação nova aguentou"
+INTRO_DATA = "11/09/2026"
+INTRO_TITULO = "O aperto mudou de estreito — e de barril"
 INTRO_TEXTO = (
-    "O prêmio de guerra saiu do preço quase tão rápido quanto entrou: o Brent devolveu "
-    "em uma semana o rali que o levara aos três dígitos (de cerca de 101 para 88 "
-    "dólares). O déficit, porém, é real — o mundo queimou 6,3 milhões de barris por dia "
-    "em maio, o ritmo mais forte desde 2021 —, e o que o absorveu aparece nos painéis "
-    "abaixo. Primeiro, a reserva estratégica americana: a SPR perdeu 102 milhões de "
-    "barris em 2026 e está em 311 Mb, 43% do pico histórico. Segundo, a resposta "
-    "privada, que já começou: os rigs de óleo saíram de 407 em abril para 450, alta de "
-    "11% que coloca barril novo do shale entre o fim de 2026 e meados de 2027. E o "
-    "déficit vem encolhendo desde maio (2,3 Mb/d em julho). O ponto de atenção agora é "
-    "o gás europeu — não pelo ritmo de injeção, que é normal, mas pelo nível: 55,9% em "
-    "27/07, o menor para a data desde 2021 e 17 pontos abaixo da média de 2018–2025. A "
-    "Europa entra no inverno com o colchão mais fino em cinco anos.")
+    "Com Ormuz ainda bloqueado, o aperto migrou para o Bab el-Mandeb: desde julho os "
+    "houthis bloqueiam navios e portos sauditas na saída sul do Mar Vermelho — "
+    "justamente a rota de fuga que a Arábia Saudita montou via oleoduto até Yanbu. As "
+    "exportações de Yanbu caíram à metade em agosto e o desvio agora é por Suez. O "
+    "balanço reabriu: depois do quase-equilíbrio de julho (−0,1 Mb/d), agosto queimou "
+    "4,1 e setembro queima 4,8 Mb/d (EIA/STEO), com a produção mundial em 99,4 Mb/d — "
+    "9 abaixo do pico de fevereiro. O Brent voltou aos três dígitos (109,5 no spot de "
+    "09/09) com a curva em backwardation extrema (percentil 95 em 5 anos). E o aperto "
+    "é de PRODUTO, não de cru: o crack do diesel chegou a 103 dólares por barril em "
+    "1º/09 — os maiores níveis desde o choque de 2022 — com os destilados americanos "
+    "12,8% abaixo da média de 5 anos enquanto o estoque de cru está normalizado "
+    "(+0,4%). Os amortecedores seguem encolhendo: a SPR caiu a 285 Mb (−128 no ano) e "
+    "o gás europeu, a 67,7%, está abaixo do mínimo 2018–2025 para a data, a caminho do "
+    "inverno.")
 
 
 def _intro_metricas():
@@ -975,18 +977,21 @@ HTML = """<!DOCTYPE html>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Energia Global — ASIF</title>
 <style>
-:root{--page:#0f1117;--card:#1a1f2e;--border:#2d3748;--ink:#e2e8f0;
-  --muted:#718096;--ouro:#C9A84C;--hl:#2a4365}
+:root{--page:#f9f9f7;--card:#fcfcfb;--border:rgba(11,11,11,.10);--ink:#0b0b0b;
+  --ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;
+  --ouro:#C9A84C;--ouro-texto:#8a7433;--navy:#002147;--hl:#002147}
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);
   font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 .wrap{max-width:1420px;margin:0 auto;padding:16px 20px 40px}
 header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:6px 0 12px;
-  background:linear-gradient(135deg,#1a1f2e,#0f1117);border:1px solid var(--border);
+  background:var(--card);border:1px solid var(--border);
   border-radius:12px;padding:14px 18px}
 header h1{font-size:19px;margin:0;font-weight:650}
-header .logo{background:var(--ouro);color:#0f1117;font-weight:800;border-radius:8px;
-  padding:6px 10px;letter-spacing:.5px}
+header .logo{background:var(--ouro);color:var(--navy);font-weight:900;font-size:13px;
+  border-radius:6px;padding:5px 10px 5px 12px;letter-spacing:.18em}
+header .cap{font-family:Georgia,'Times New Roman',serif;font-style:italic;
+  color:var(--ouro-texto);font-size:13px;letter-spacing:.14em}
 header .sub{font-size:12.5px;color:var(--muted)}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
   gap:10px;margin:12px 0}
@@ -999,7 +1004,7 @@ header .sub{font-size:12.5px;color:var(--muted)}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
 .tabs button{background:var(--card);border:1px solid var(--border);color:var(--ink);
   border-radius:8px;padding:8px 14px;font-size:13.5px;cursor:pointer}
-.tabs button.on{background:var(--hl);border-color:#4590c9;font-weight:650}
+.tabs button.on{background:var(--hl);border-color:var(--hl);color:#fff;font-weight:650}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(560px,1fr));gap:14px}
 .card{background:var(--card);border:1px solid var(--border);border-radius:12px;
   padding:12px 14px}
@@ -1008,9 +1013,10 @@ header .sub{font-size:12.5px;color:var(--muted)}
 .legenda{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;margin:4px 0 2px}
 .legenda span{display:inline-flex;align-items:center;gap:5px;color:var(--ink)}
 .legenda i{width:10px;height:10px;border-radius:3px;display:inline-block}
-.tt{position:fixed;pointer-events:none;background:#0f1117f0;border:1px solid var(--border);
-  border-radius:8px;padding:8px 10px;font-size:12px;z-index:10;display:none;max-width:260px}
-.tt b{color:var(--ouro)}
+.tt{position:fixed;pointer-events:none;background:#ffffff;border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;font-size:12px;z-index:10;display:none;max-width:260px;
+  box-shadow:0 4px 16px rgba(0,0,0,.14)}
+.tt b{color:var(--ink)}
 .btn-tab{background:none;border:1px solid var(--border);color:var(--muted);
   border-radius:6px;font-size:10.5px;padding:2px 8px;cursor:pointer;float:right}
 table.dados{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:6px}
@@ -1021,14 +1027,14 @@ footer{margin-top:18px;font-size:11.5px;color:var(--muted)}
 .nota-aba{margin-top:14px;background:var(--card);border:1px solid var(--border);
   border-left:3px solid var(--ouro);border-radius:10px;padding:12px 16px;
   font-size:12.5px;line-height:1.6;color:var(--ink)}
-.nota-aba b{color:var(--ouro)}
+.nota-aba b{color:var(--ouro-texto)}
 .disclaimer{background:var(--card);border:1px solid var(--border);border-radius:10px;
   padding:12px 16px;line-height:1.6;font-size:11.5px;color:var(--muted)}
 .disclaimer b{color:var(--ink)}
-.intro{background:linear-gradient(135deg,#1a1f2e,#141927);border:1px solid var(--border);
+.intro{background:var(--card);border:1px solid var(--border);
   border-left:3px solid var(--ouro);border-radius:12px;padding:14px 18px;margin:12px 0 4px}
 .intro-cab{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
-.intro-titulo{font-size:15.5px;font-weight:700;color:var(--ouro)}
+.intro-titulo{font-size:15.5px;font-weight:700;color:var(--ouro-texto)}
 .intro-data{font-size:11px;color:var(--muted)}
 .intro p{margin:8px 0 10px;font-size:13px;line-height:1.65;color:var(--ink)}
 .intro-metricas{display:flex;flex-wrap:wrap;gap:16px}
@@ -1042,7 +1048,7 @@ table.tab-g th{color:var(--muted);font-weight:600;text-align:right;padding:4px 8
 table.tab-g th:first-child{text-align:left}
 table.tab-g td{padding:4px 8px}
 </style></head><body><div class="wrap">
-<header><span class="logo">ASIF</span>
+<header><span class="logo">ASIF</span><span class="cap">Capital</span>
 <div><h1>Energia Global — fontes primárias</h1>
 <div class="sub">EIA · GIE AGSI/ALSI · SMARD/Bundesnetzagentur · ONS · CCEE · ANP · EPE · JODI · CFTC · Baker Hughes
  &nbsp;|&nbsp; gerado em __GERADO__ &nbsp;|&nbsp; cada painel indica fonte e frequência</div></div>
@@ -1101,7 +1107,7 @@ function mostra(ix){
    const t=c.tabela;
    const linhas=t.linhas.map(l=>`<tr>${l.map((v,j)=>{
     let cls="";
-    if(j===t.sinal_col&&v!=="—")cls=v.startsWith("-")?' style="color:#e25d75"':' style="color:#3aa15f"';
+    if(j===t.sinal_col&&v!=="—")cls=v.startsWith("-")?' style="color:#e34948"':' style="color:#2a78d6"';
     return `<td${cls}>${v}</td>`}).join("")}</tr>`).join("");
    return `<div class="card card-tabela"><h3>${c.titulo}</h3><div class="fonte">${c.fonte} — ${c.unidade}</div>`+
     `<div class="rolagem"><table class="dados tab-g"><tr>${t.colunas.map(x=>`<th>${x}</th>`).join("")}</tr>${linhas}</table></div></div>`;
@@ -1139,8 +1145,8 @@ function desenha(id){
  let svg=`<svg width="${W}" height="${H}" data-ch="${id}">`;
  // grade horizontal (5 ticks)
  const nt=5;for(let i=0;i<=nt;i++){const v=y0+(y1-y0)*i/nt,y=Y(v);
-  svg+=`<line x1="${ML}" y1="${y}" x2="${W-MR}" y2="${y}" stroke="#2d3748" stroke-width="1"/>`;
-  svg+=`<text x="${ML-6}" y="${y+4}" fill="#718096" font-size="10.5" text-anchor="end">${fmt(v,Math.abs(y1-y0)<10?1:0)}</text>`}
+  svg+=`<line x1="${ML}" y1="${y}" x2="${W-MR}" y2="${y}" stroke="#e1e0d9" stroke-width="1"/>`;
+  svg+=`<text x="${ML-6}" y="${y+4}" fill="#898781" font-size="10.5" text-anchor="end">${fmt(v,Math.abs(y1-y0)<10?1:0)}</text>`}
  // eixo x: anos (ou meses p/ dia-do-ano), com passo p/ não colidir rótulos
  const marcas=[],vistos=new Set();
  for(let d=Math.ceil(x0);d<=x1;d+=1){const dt=new Date(d*86400000);
@@ -1150,14 +1156,14 @@ function desenha(id){
    marcas.push([d,cfg.eixo_doy?dt.toLocaleString("pt-BR",{month:"short",timeZone:"UTC"}):dt.getUTCFullYear()])}}
  const passo=Math.max(1,Math.ceil(marcas.length/8));
  marcas.forEach((m,i)=>{if(i%passo===0)
-  svg+=`<text x="${X(m[0])}" y="${H-8}" fill="#718096" font-size="10.5" text-anchor="middle">${m[1]}</text>`});
- if(cfg.zero&&y0<0){svg+=`<line x1="${ML}" y1="${Y(0)}" x2="${W-MR}" y2="${Y(0)}" stroke="#718096" stroke-width="1.2" stroke-dasharray="3 3"/>`}
+  svg+=`<text x="${X(m[0])}" y="${H-8}" fill="#898781" font-size="10.5" text-anchor="middle">${m[1]}</text>`});
+ if(cfg.zero&&y0<0){svg+=`<line x1="${ML}" y1="${Y(0)}" x2="${W-MR}" y2="${Y(0)}" stroke="#898781" stroke-width="1.2" stroke-dasharray="3 3"/>`}
  if(cfg.barras){
   // barras com sinal: positivo verde (acúmulo), negativo rose (queima)
   const p=ss[0].p, bw=Math.max(1,(W-ML-MR)/p.length*0.75);
   p.forEach(([d,v])=>{
    const y=Math.min(Y(v),Y(0)), h=Math.abs(Y(v)-Y(0));
-   svg+=`<rect x="${X(d)-bw/2}" y="${y}" width="${bw}" height="${Math.max(h,0.5)}" fill="${v>=0?"#3aa15f":"#e25d75"}"/>`});
+   svg+=`<rect x="${X(d)-bw/2}" y="${y}" width="${bw}" height="${Math.max(h,0.5)}" fill="${v>=0?"#2a78d6":"#e34948"}"/>`});
  }else if(cfg.stack){
   // áreas empilhadas com gap visual de 1.5px entre camadas
   const datas=ss[0].p.map(p=>p[0]);
@@ -1166,7 +1172,7 @@ function desenha(id){
    const topo=s.p.map((p,i)=>acum[i]+p[1]);
    let path="M"+s.p.map((p,i)=>`${X(p[0])},${Y(topo[i])}`).join("L");
    path+="L"+s.p.map((p,i)=>`${X(p[0])},${Y(acum[i])}`).reverse().join("L")+"Z";
-   svg+=`<path d="${path}" fill="${s.cor}" stroke="#1a1f2e" stroke-width="1.5" fill-opacity="0.92"/>`;
+   svg+=`<path d="${path}" fill="${s.cor}" stroke="#fcfcfb" stroke-width="1.5" fill-opacity="0.92"/>`;
    s.p.forEach((p,i)=>acum[i]=topo[i]);
   });
  }else{
@@ -1176,7 +1182,7 @@ function desenha(id){
    svg+=`<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="${w}" stroke-opacity="${op}"/>`;
   });
  }
- svg+=`<line id="ch_${id}" x1="0" y1="${MT}" x2="0" y2="${H-MB}" stroke="#e2e8f0" stroke-width="0.7" opacity="0"/>`;
+ svg+=`<line id="ch_${id}" x1="0" y1="${MT}" x2="0" y2="${H-MB}" stroke="#52514e" stroke-width="0.7" opacity="0"/>`;
  svg+=`<rect x="${ML}" y="${MT}" width="${W-ML-MR}" height="${H-MT-MB}" fill="transparent" class="hover"/>`;
  svg+=`</svg>`;
  el.innerHTML=svg;

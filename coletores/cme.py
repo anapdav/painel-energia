@@ -55,10 +55,19 @@ def coleta(con, registra_serie, grava_dados, log=print):
     cod = front["quoteCode"]                       # ex. CLU6
     sufixo_venc = cod[len("CL"):]                  # ex. U6
 
+    # Brent: front month da PRÓPRIA cadeia BZ. Motivo (lição de 11/09/2026):
+    # o BZ de um mês expira ~3 semanas antes do CL do mesmo mês — parear pelo
+    # mês do WTI deixa o Brent órfão nessa janela (a série ficou parada de
+    # 28/08 a 11/09 por isso). Os vencimentos ficam explícitos nos rótulos;
+    # quando divergirem, o log avisa.
     try:
         d_bz = _quotes(424)
-        q_bz = next((q for q in d_bz["quotes"]
-                     if q["quoteCode"] == f"BZ{sufixo_venc}"), None)
+        q_bz = next((q for q in d_bz["quotes"] if q.get("isFrontMonth")),
+                    d_bz["quotes"][0])
+        suf_bz = q_bz["quoteCode"][len("BZ"):]
+        if suf_bz != sufixo_venc:
+            log(f"  [nota] vencimentos distintos: WTI {sufixo_venc} x Brent {suf_bz} "
+                "(BZ do mês do WTI já expirou — spread comparar com cuidado)")
     except Exception as e:
         log(f"  [ERRO] cme Brent: {type(e).__name__}: {e}")
         q_bz = None
@@ -77,9 +86,9 @@ def coleta(con, registra_serie, grava_dados, log=print):
             log(f"  [AVISO] cme {nome}: sem preço utilizável")
             continue
         registra_serie(con, sid, "CME", "mercado", "crude",
-                       f"Futuro de {nome}, vencimento pareado pelo front month do "
-                       f"WTI (CME, atraso {atraso}; até 23/07/2026 pontos via "
-                       "Yahoo — mesmos dados CME redistribuídos)",
+                       f"Futuro de {nome}, front month da própria cadeia (CME, "
+                       f"atraso {atraso}; contrato explícito no rótulo; até "
+                       "23/07/2026 pontos via Yahoo — mesmos dados CME)",
                        "USD/barril", "diaria",
                        "cmegroup.com /CmeWS/mvc/quotes/v2")
         grava_dados(con, sid, [(data, round(valor, 2))])
