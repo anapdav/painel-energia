@@ -96,3 +96,36 @@ def coleta(con, registra_serie, grava_dados, log=print):
         db.grava_meta(con, f"{sid}_contrato",
                       f"{nome} {q.get('expirationMonth', cod)}{rotulo_fech}")
         log(f"  {sid}: {valor} USD/b [{q['quoteCode']}] em {data}")
+
+    # --- Gás: TTF (Europa) e JKM (GNL Ásia), front month de cada cadeia ---
+    # Fecha o gap documentado do TTF: a CME lista futuros de TTF e JKM com a
+    # mesma API de cotações (atraso 10 min). Sem histórico na API — as séries
+    # acumulam um ponto por pregão a partir de 11/09/2026.
+    GAS = [(8378, "fut_ttf", "TTF (gás Europa)", "EUR/MWh"),
+           (7049, "fut_jkm", "JKM (GNL Ásia)", "USD/MMBtu")]
+    for pid, sid, nome, unidade in GAS:
+        try:
+            dg = _quotes(pid)
+            qg = next((x for x in dg["quotes"] if x.get("isFrontMonth")),
+                      dg["quotes"][0])
+        except Exception as e:
+            log(f"  [ERRO] cme {sid}: {type(e).__name__}: {e}")
+            continue
+        valor = _num(qg.get("last"))
+        rot = ""
+        if valor is None or valor == 0:
+            valor = _num(qg.get("priorSettle"))
+            rot = " (settle anterior)"
+        if valor is None:
+            log(f"  [AVISO] cme {sid}: sem preço utilizável")
+            continue
+        registra_serie(con, sid, "CME", "mercado", "gas_natural",
+                       f"Futuro de {nome}, front month (CME, atraso {atraso}; "
+                       "série acumulada desde 11/09/2026 — API sem histórico)",
+                       unidade, "diaria", "cmegroup.com /CmeWS/mvc/quotes/v2")
+        grava_dados(con, sid, [(data, round(valor, 2))])
+        db.grava_meta(con, f"{sid}_hora", agora)
+        db.grava_meta(con, f"{sid}_contrato",
+                      f"{nome.split(' (')[0]} {qg.get('expirationMonth', qg['quoteCode'])}{rot}")
+        db.grava_meta(con, f"{sid}_unidade", unidade)
+        log(f"  {sid}: {valor} {unidade} [{qg['quoteCode']}] em {data}")

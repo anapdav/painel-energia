@@ -104,8 +104,9 @@ def kpi_fut(sid, label):
         return r[0] if r else None
     val = f"{v:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".") if v is not None else "-"
     contrato = m("contrato") or "contrato n/d"
+    unidade = m("unidade") or "USD/b"
     return {"label": label, "valor": val,
-            "unidade": f"USD/b — {contrato} (CME, atraso 10 min)",
+            "unidade": f"{unidade} — {contrato} (CME, atraso 10 min)",
             "data": m("hora") or d}
 
 
@@ -167,6 +168,8 @@ KPIS = [
     kpi_fut("fut_wti", "WTI futuro"),
     kpi_fut("fut_brent", "Brent futuro"),
     kpi("eia_henryhub_spot", "Henry Hub", "USD/MMBtu"),
+    kpi_fut("fut_ttf", "TTF gás Europa"),
+    kpi_fut("fut_jkm", "JKM GNL Ásia"),
     kpi("smard_de_preco_da", "Day-ahead DE-LU", "EUR/MWh", 1),
     kpi("agsi_eu_cheio_pct", "Gás UE armazenado", "% cheio", 1),
     kpi("ccee_pld_dia_se", "PLD SE/CO", "R$/MWh", 1),
@@ -645,6 +648,17 @@ def agsi_por_ano(sid, anos, cores):
                     "grossa": ano == anos[-1]})
     return out
 
+CH["fut_ttf"] = {
+    "titulo": "O preço do gás na Europa — TTF", "unidade": "EUR/MWh",
+    "fonte": "Futuro front month na CME (atraso 10 min); série acumulada desde "
+             "11/09/2026 — a CME não fornece histórico e o histórico do TTF "
+             "(ICE Endex) segue sem fonte primária gratuita",
+    "series": [serie("fut_ttf", "TTF front month", "ouro")]}
+CH["fut_jkm"] = {
+    "titulo": "E na Ásia — JKM (GNL spot)", "unidade": "USD/MMBtu",
+    "fonte": "Futuro front month na CME (atraso 10 min); série acumulada desde "
+             "11/09/2026. Eixo separado do TTF: unidades e moedas distintas",
+    "series": [serie("fut_jkm", "JKM front month", "roxo")]}
 CH["agsi_anos"] = {
     "titulo": "Gás UE — % do armazenamento cheio, anos sobrepostos", "unidade": "%",
     "fonte": "GIE AGSI+ (diário, 19h30 CET); eixo = dia do ano",
@@ -825,7 +839,8 @@ ABAS = [
                            "cftc", "jodi_prod", "jodi_dem"]),
     ("Shale EUA", ["shale_estados", "rigs", "shale_oleo", "shale_gas",
                    "shale_produtividade", "shale_duc", "shale_atividade"]),
-    ("Gás Europa", ["agsi_anos", "agsi_paises", "agsi_fluxo", "alsi"]),
+    ("Gás Europa", ["fut_ttf", "fut_jkm", "agsi_anos", "agsi_paises",
+                    "agsi_fluxo", "alsi"]),
     ("Matriz Alemanha", ["de_share", "de_preco", "de_carga"]),
     ("Matriz Europa", ["eu_precos", "fr_share", "es_share", "it_share", "pl_share"]),
     ("Brasil", ["br_share", "ear", "pld", "carga_sin", "anp", "epe"]),
@@ -956,8 +971,9 @@ NOTAS_ABA = {
     "Gás Europa": (
         "<b>Como ler esta aba.</b> O gás natural não tem preço único mundial: cada região "
         "tem seu hub de referência — o <b>Henry Hub</b> nos EUA (na aba Óleo &amp; Gás "
-        "global), o <b>TTF</b> na Holanda, referência de preço da Europa (sem fonte "
-        "primária gratuita, por isso não exibido), e o <b>JKM</b> na Ásia. Quem conecta "
+        "global), o <b>TTF</b> na Holanda, referência de preço da Europa (exibido aqui "
+        "pelo futuro na CME, com atraso de 10 min e série iniciada em 11/09/2026 — "
+        "o histórico longo do ICE Endex segue sendo dado pago), e o <b>JKM</b> na Ásia. Quem conecta "
         "os três mercados é o <b>GNL</b> (gás natural liquefeito), o gás resfriado a "
         "−162 °C para viajar de navio — foi a liquefação que transformou o gás de "
         "mercado regional em commodity global.<br>O <b>AGSI</b> (Aggregated Gas Storage "
