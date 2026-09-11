@@ -67,10 +67,11 @@ Usam o **último ano com todas as colunas publicadas** (ex.: consumo da EIA inte
 
 ### CME Group (futuros — a FONTE PRIMÁRIA dos preços; substitui o Yahoo desde 23/07/2026)
 - Para preço de futuros, a bolsa é a fonte primária: os contratos WTI (CL) e Brent Last Day (BZ) são formados na própria CME, e a cotação atrasada publicada no site dela é publicação oficial do originador do dado — redistribuidores (Yahoo etc.) derivam dali.
-- Acesso pelo endpoint que alimenta o site (`/CmeWS/mvc/quotes/v2/{productId}`; CL = 425, BZ = 424), atraso de 10 min declarado na própria resposta (`quoteDelay`). Ressalva de **engenharia** (não de procedência): endpoint sem documentação pública, pode mudar sem aviso. A EIA permanece como fonte das séries longas oficiais de spot (WTI Cushing, Brent, Henry Hub).
-- **Pareamento de vencimentos (regra crítica, aprendida no Yahoo):** contínuos de redistribuidores rolam em datas diferentes e podem inverter o spread WTI-Brent. Aqui o front month do CL define o vencimento e o Brent cotado é o contrato BZ do **mesmo mês**, casado por código (CLU6 → BZU6). KPI mostra contrato e hora.
+- Acesso pelo endpoint que alimenta o site (`/CmeWS/mvc/quotes/v2/{productId}`; CL = 425, BZ = 424, TTF = 8378, JKM = 7049), atraso de 10 min declarado na própria resposta (`quoteDelay`). Ressalva de **engenharia** (não de procedência): endpoint sem documentação pública, pode mudar sem aviso. A EIA permanece como fonte das séries longas oficiais de spot (WTI Cushing, Brent, Henry Hub).
+- **Vencimentos (regra revisada em 11/09/2026):** cada série usa o front month da PRÓPRIA cadeia, com o contrato explícito no rótulo do KPI. Histórico das duas lições: (1º, no Yahoo, 23/07) contínuos de redistribuidores rolam em datas diferentes e invertem o spread; (2º, na CME, 11/09) parear o Brent pelo mês do WTI também falha — o BZ expira ~3 semanas antes do CL do mesmo mês e a série ficou órfã de 28/08 a 11/09. Quando os vencimentos de WTI e Brent diferem, o log registra a nota e o spread deve ser lido com os meses em vista.
 - Mercado fechado → usa o settlement anterior, rotulado "(settle anterior)".
 - A API não fornece histórico: a série diária acumula um ponto por pregão. Pontos até 23/07/2026 vieram do Yahoo (mesmos dados CME redistribuídos) — emenda documentada na descrição da série.
+- **TTF e JKM (desde 11/09/2026):** futuros front month na CME (ids 8378 e 7049) fecham parcialmente o gap do preço de gás europeu/asiático — nível corrente sim, histórico não (séries acumulam de 11/09 em diante; o histórico longo do ICE Endex segue pago). Unidades como cotadas (EUR/MWh, USD/MMBtu), eixos separados no painel.
 
 ### JODI (petróleo, mensal, auto-reportado)
 - Marcador de faltante é `"-"` → tratado como **ausente, nunca zero**.
@@ -131,7 +132,7 @@ Usam o **último ano com todas as colunas publicadas** (ex.: consumo da EIA inte
 | Gap | Situação |
 |---|---|
 | China (energia) | NBS bloqueia acesso programático; sem fonte primária estruturada. Petróleo da China entra via JODI (ela reporta). Qualquer proxy (Ember) deve ser rotulado como não-primário. |
-| TTF diário | ICE Endex, pago. Sem fonte primária gratuita — não exibido (dito na nota da aba de gás). |
+| TTF diário | Parcialmente fechado em 11/09/2026: nível corrente via futuro CME (TTF 8378, JKM 7049, atraso 10 min), série acumulada dali em diante. Histórico longo segue pago (ICE Endex). |
 | Reservas estratégicas | Série oficial aberta só EUA (SPR/EIA semanal). IEA publica estoques de membros só em gráfico no site (sem API — sondado 23/07/2026). China opaca; Índia divulga capacidade, não série. |
 | Grid-India | Bloqueia conexões (TLS reset) — Índia elétrica viria de CEA/NPP (pendente de construção). |
 | Rússia pós-2023 | Parou de reportar ao JODI; produção segue visível via EIA international (estimativa da agência). |
