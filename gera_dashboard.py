@@ -533,6 +533,7 @@ for sid_prod, nome in [("eia_diesel_spot_gal", "diesel"),
                     for d, v in q(sid_prod, "2015-01-01") if d in _brent}
 _c321 = {d: (2 * _crack["gasolina"][d] + _crack["diesel"][d]) / 3
          for d in _crack["diesel"] if d in _crack["gasolina"]}
+_ref_crack = sum(v for d, v in _c321.items() if d < "2020-01-01") /     max(1, sum(1 for d in _c321 if d < "2020-01-01"))  # media 2015-19 da cesta
 
 CH["cracks"] = {
     "titulo": "Quanto a refinaria ganha por barril — margem de refino (crack spread)",
@@ -547,8 +548,10 @@ CH["cracks"] = {
          "data": compacta(sorted(_crack["gasolina"].items()))},
         {"label": "Jet fuel", "cor": COR["roxo"],
          "data": compacta(sorted(_crack["jet"].items()))},
-        {"label": "3-2-1 (cesta)", "cor": COR["cinza"],
-         "data": compacta(sorted(_c321.items()))}]}
+        {"label": "Cesta da refinaria (3-2-1)", "cor": COR["cinza"],
+         "data": compacta(sorted(_c321.items()))}],
+    "linha_ref": {"valor": round(_ref_crack, 1),
+                  "label": f"normal pré-choques: US$ {_ref_crack:.0f}/b (média 2015–19 da cesta)"}}
 
 CH["cftc"] = {
     "titulo": "Managed money net — WTI e Henry Hub", "unidade": "mil contratos",
@@ -1158,6 +1161,9 @@ function desenha(id){
  marcas.forEach((m,i)=>{if(i%passo===0)
   svg+=`<text x="${X(m[0])}" y="${H-8}" fill="#898781" font-size="10.5" text-anchor="middle">${m[1]}</text>`});
  if(cfg.zero&&y0<0){svg+=`<line x1="${ML}" y1="${Y(0)}" x2="${W-MR}" y2="${Y(0)}" stroke="#898781" stroke-width="1.2" stroke-dasharray="3 3"/>`}
+ if(cfg.linha_ref){const yr=Y(cfg.linha_ref.valor);
+  svg+=`<line x1="${ML}" y1="${yr}" x2="${W-MR}" y2="${yr}" stroke="#8a7433" stroke-width="1.4" stroke-dasharray="6 4"/>`;
+  svg+=`<text x="${ML+6}" y="${yr-5}" fill="#8a7433" font-size="11">${cfg.linha_ref.label}</text>`}
  if(cfg.barras){
   // barras com sinal: positivo verde (acúmulo), negativo rose (queima)
   const p=ss[0].p, bw=Math.max(1,(W-ML-MR)/p.length*0.75);
