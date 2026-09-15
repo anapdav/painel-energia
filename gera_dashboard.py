@@ -570,6 +570,19 @@ CH["jodi_prod"] = {
          ("jodi_prod_RU", "Rússia (até 2023)"), ("jodi_prod_CA", "Canadá"),
          ("jodi_prod_CN", "China")],
         atribui_cores(["EUA", "Arábia Saudita", "Rússia", "Canadá", "China"]))]}
+CH["china_oleo"] = {
+    "titulo": "China — o colapso de importação, refino e demanda",
+    "unidade": "mil b/d",
+    "fonte": "JODI, auto-reportado pela China (mensal, defasagem ~2-3 meses). Refino = "
+             "produção de refinaria (proxy de runs; último mês omitido por ser "
+             "preliminar). O semanal que o sell-side mostra é Oilchem/Bloomberg, "
+             "comercial — sem via primária gratuita",
+    "series": [serie(sid, label, cor, "2019-01-01") for (sid, label), cor in zip(
+        [("jodi_cru_m_CN", "Importação de cru"),
+         ("jodi_ref_CN_total", "Refino (produção de derivados)"),
+         ("jodi_dem_CN", "Demanda de derivados")],
+        [COR["rose"], COR["azul"], COR["ouro"]])]}
+
 CH["jodi_dem"] = {
     "titulo": "Demanda de derivados — maiores consumidores (JODI)",
     "unidade": "mil b/d", "fonte": "JODI-Oil secundário (mensal)",
@@ -836,7 +849,7 @@ ABAS = [
     ("Fertilizantes", ["fert_prod", "fert_uso", "fert_brasil", "fert_gas"]),
     ("Óleo & Gás global", ["precos_oleo", "cracks", "hh", "estoques_us",
                            "cushing_spr", "prod_us", "rigs", "gas_estoque_us",
-                           "cftc", "jodi_prod", "jodi_dem"]),
+                           "cftc", "china_oleo", "jodi_prod", "jodi_dem"]),
     ("Shale EUA", ["shale_estados", "rigs", "shale_oleo", "shale_gas",
                    "shale_produtividade", "shale_duc", "shale_atividade"]),
     ("Gás Europa", ["fut_ttf", "fut_jkm", "agsi_anos", "agsi_paises",
